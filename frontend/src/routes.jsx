@@ -5,7 +5,7 @@ import { AuthContext } from "./context/AuthContext";
 import Layout from "./components/Layout";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import Profile from "./components/Profile"
+import MyProfile from "./components/MyProfile"
 
 import Test from "./components/test";
 
@@ -33,10 +33,10 @@ export const routes = [
         children: [
             { path: '/', element: <Home /> },
             { path: '/test', element: <Test /> },
-            { path: '/profile', element: <Profile /> },
+            { path: '/profile', element: <MyProfile /> },
         ],
     },
-    
+
     { path: "*", element: <Navigate to="/login" /> },
     
 ];
