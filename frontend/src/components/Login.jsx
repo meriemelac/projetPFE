@@ -1,7 +1,12 @@
-import { useState } from "react";
-import axiosInstance from "../api/api"; // Import de l'instance Axios
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../api/api";
+import { AuthContext } from "../context/AuthContext"; // Import du contexte
 
 const Login = () => {
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -12,8 +17,12 @@ const Login = () => {
 
         try {
             const response = await axiosInstance.post("/login", { email, password });
-            localStorage.setItem("token", response.data.token);
-            alert("Connexion réussie !");
+
+            // Sauvegarde du token et mise à jour de l'état global
+            login(response.data.token, response.data.user.first_name, response.data.user.last_name );
+            
+            // Redirection vers la page d'accueil après connexion
+            navigate("/");
         } catch (err) {
             setError(err.response?.data?.message || "Login failed");
         }

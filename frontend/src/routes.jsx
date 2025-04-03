@@ -1,5 +1,6 @@
-import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import React, { useContext } from "react";
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { AuthContext } from "./context/AuthContext";
 
 import Layout from "./components/Layout";
 import Home from "./components/Home";
@@ -7,6 +8,13 @@ import Login from "./components/Login";
 import Profile from "./components/Profile"
 
 import Test from "./components/test";
+
+
+const ProtectedRoute = ({ children }) => {
+    const { isAuthenticated } = useContext(AuthContext);
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
 
 export const routes = [
 
@@ -17,14 +25,19 @@ export const routes = [
 
     {
         path: '/',
-        element: <Layout />,  // Le Layout est toujours présent
+        element: (
+            <ProtectedRoute>
+                <Layout />
+            </ProtectedRoute>
+        ),  // Le Layout est toujours présent
         children: [
             { path: '/', element: <Home /> },
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <Profile /> },
         ],
     },
-
+    
+    { path: "*", element: <Navigate to="/login" /> },
     
 ];
 
