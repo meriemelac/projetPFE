@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
+import Notifications from "./components/Notifications"
 
 import Test from "./components/test";
 
@@ -34,6 +35,7 @@ export const routes = [
             { path: '/', element: <Home /> },
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <MyProfile /> },
+            { path: '/notifications', element: <Notifications /> },
         ],
     },
 

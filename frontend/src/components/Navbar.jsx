@@ -17,6 +17,7 @@ function Navbar() {
         <div>
             <h1>Mon Application</h1>
             <ul>
+                <li><Link to="/notifications">My Notifications</Link></li>
                 <li><Link to="/profile">My profile</Link></li>
             </ul>
             <button onClick={handleLogout}>Se déconnecter</button>
