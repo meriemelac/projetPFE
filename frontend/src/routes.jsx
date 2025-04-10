@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
 import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
+import Projects from "./components/Projects"
 
 import Test from "./components/test";
 
@@ -38,6 +39,7 @@ export const routes = [
             { path: '/profile', element: <MyProfile /> },
             { path: '/notifications', element: <Notifications /> },
             { path: '/departments', element: <Departments /> },
+            { path: '/projects', element: <Projects /> },
         ],
     },
 
