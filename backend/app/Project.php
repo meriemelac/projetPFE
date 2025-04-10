@@ -30,8 +30,8 @@ class Project extends Model
         return $this->belongsTo(Employee::class, 'created_by');
     }
 
-    // public function team()
-    // {
-    //     return $this->belongsTo(Team::class);
-    // }
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,6 @@ Route::get('/departments', [DepartmentController::class, 'index']);
 
 //Projects
 Route::get('/projects', [ProjectController::class, 'index']);
+
+//Team
+Route::get('/teams', [TeamController::class, 'index']);
