@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
 import Notifications from "./components/Notifications"
+import Departments from "./components/departments"
 
 import Test from "./components/test";
 
@@ -36,6 +37,7 @@ export const routes = [
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <MyProfile /> },
             { path: '/notifications', element: <Notifications /> },
+            { path: '/departments', element: <Departments /> },
         ],
     },
 

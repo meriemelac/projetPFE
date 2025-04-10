@@ -12,7 +12,9 @@ function Sidebar() {
             </div>
             <ul>
                 <li><Link to="/">Accueil</Link></li>
+                <li><Link to="/departments">Departments</Link></li>
                 <li><Link to="/test">Test</Link></li>
+                
             </ul>
         </nav>
     );
