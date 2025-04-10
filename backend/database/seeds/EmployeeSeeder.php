@@ -13,18 +13,20 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        //
         DB::table('employees')->insert([
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john.doe@example.com',
-            'password' => bcrypt('password123'), // Assurez-vous d'utiliser bcrypt pour crypter le mot de passe
+            'password' => bcrypt('password123'),
             'phone' => '0123456789',
-            'position' => 'Director General', // Position : Directeur Général
-            'role_id' => 1, // role_id = 1
-            'profile_picture' => null, // Optionnel
-            'status' => 'active', // Statut actif par défaut
-            'hire_date' => Carbon::now(), // Date d'embauche actuelle
+            'position' => 'Director General',
+            'role_id' => 1,
+            'department_id' => null, // ← Aucun département car c’est le DG
+            'profile_picture' => null,
+            'status' => 'active',
+            'hire_date' => Carbon::now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
     }
 }

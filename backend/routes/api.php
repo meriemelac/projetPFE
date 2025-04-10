@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,7 @@ Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 //Notifications
 Route::get('/notifications', [NotificationController::class, 'index']);
+
+
+//Departements
+Route::get('/departments', [DepartmentController::class, 'index']);
