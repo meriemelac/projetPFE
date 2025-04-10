@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,6 @@ Route::get('/notifications', [NotificationController::class, 'index']);
 
 //Departements
 Route::get('/departments', [DepartmentController::class, 'index']);
+
+//Projects
+Route::get('/projects', [ProjectController::class, 'index']);
