@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../api/api"; // Import de l'instance Axios
+import { useNavigate } from "react-router-dom";
+
 
 const Projects = () => {
     const [projects, setprojects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchprojects = async () => {
@@ -35,6 +38,9 @@ const Projects = () => {
                         <li key={proj.id}>
                             <p><strong>Projet :</strong> {proj.title}</p>
                             <p><strong>Description du projet :</strong> {proj.description}</p>
+                            <button onClick={() => navigate(`/projects/${proj.id}`)}>
+                                Voir les détails
+                            </button>
                             <hr />
                         </li>
                     ))}

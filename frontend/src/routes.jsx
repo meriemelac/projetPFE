@@ -9,7 +9,8 @@ import MyProfile from "./components/MyProfile"
 import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
 import Projects from "./components/Projects"
-import Teams from "./components/Teams"
+import ProjectDetails from "./components/ProjectDetails"
+import Teams from "./components/Projects"
 import TeamDetails from "./components/TeamDetails";
 import Tasks from "./components/Tasks"
 import TaskDetails from "./components/TaskDetails";
@@ -44,6 +45,7 @@ export const routes = [
             { path: '/notifications', element: <Notifications /> },
             { path: '/departments', element: <Departments /> },
             { path: '/projects', element: <Projects /> },
+            { path: '/projects/:id', element: <ProjectDetails /> },
             { path: '/teams', element: <Teams /> },
             { path: "/teams/:id", element: <TeamDetails />},
             { path: '/tasks', element: <Tasks /> },
