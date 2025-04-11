@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App; // ← Corriger le namespace si ton modèle est dans app/Models
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Authenticatable
 {
@@ -19,6 +19,7 @@ class Employee extends Authenticatable
         'phone',
         'position',
         'role_id',
+        'department_id',
         'profile_picture',
         'status',
         'hire_date',
@@ -30,11 +31,39 @@ class Employee extends Authenticatable
     ];
 
     protected $casts = [
+        'hire_date' => 'date',
         'email_verified_at' => 'datetime',
     ];
+
+    // 🔗 Relations
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'employee_team');
+    }
+
+    public function projectsManaged()
+    {
+        return $this->hasMany(Project::class, 'manager_id');
+    }
+
+    public function projectsCreated()
+    {
+        return $this->hasMany(Project::class, 'created_by');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

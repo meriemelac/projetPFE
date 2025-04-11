@@ -41,3 +41,5 @@ Route::get('/projects', [ProjectController::class, 'index']);
 
 //Team
 Route::get('/teams', [TeamController::class, 'index']);
+Route::get('/teams/{id}', [TeamController::class, 'show']);
+

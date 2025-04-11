@@ -15,4 +15,11 @@ class TeamController extends Controller
             'teams' => $teams,
         ]);
     }
+
+    public function show($id)
+    {
+        $team = Team::with('employees')->findOrFail($id);
+
+        return response()->json($team);
+    }
 }

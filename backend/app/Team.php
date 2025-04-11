@@ -24,8 +24,8 @@ class Team extends Model
         return $this->hasMany(Project::class);
     }
 
-    // public function employees()
-    // {
-    //     return $this->belongsToMany(Employee::class, 'employee_team');
-    // }
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'employee_team');
+    }
 }
