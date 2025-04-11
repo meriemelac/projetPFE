@@ -10,6 +10,7 @@ import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
 import Projects from "./components/Projects"
 import Teams from "./components/Teams"
+import TeamDetails from "./components/TeamDetails";
 
 import Test from "./components/test";
 
@@ -42,6 +43,7 @@ export const routes = [
             { path: '/departments', element: <Departments /> },
             { path: '/projects', element: <Projects /> },
             { path: '/teams', element: <Teams /> },
+            { path: "/teams/:id", element: <TeamDetails />},
         ],
     },
 

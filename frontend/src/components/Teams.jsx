@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../api/api"; // Import de l'instance Axios
+import axiosInstance from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 const Teams = () => {
-    const [teams, setteams] = useState([]);
+    const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchteams = async () => {
+        const fetchTeams = async () => {
             try {
                 const response = await axiosInstance.get("/teams");
-                setteams(response.data.teams); // on extrait le tableau
-                console.log("teams reçues:", response.data.teams);
+                setTeams(response.data.teams);
             } catch (error) {
-                setError(error.response?.data?.message || "Erreur lors de la récupération des teams");
-                console.error("Erreur:", error);
+                setError("Erreur lors de la récupération des équipes");
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchteams();
+        fetchTeams();
     }, []);
 
     if (loading) return <p>Chargement...</p>;
@@ -28,20 +28,17 @@ const Teams = () => {
 
     return (
         <div>
-            <h2>teams</h2>
-            {teams.length > 0 ? (
-                <ul>
-                    {teams.map((team) => (
-                        <li key={team.id}>
-                            <p><strong>team :</strong> {team.name}</p>
-                            <p><strong>Description du team :</strong> {team.description}</p>
-                            <hr />
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>Aucune team trouvée</p>
-            )}
+            <h2>Liste des Équipes</h2>
+            <ul>
+                {teams.map((team) => (
+                    <li key={team.id} style={{ marginBottom: "1rem" }}>
+                        <p><strong>{team.name}</strong></p>
+                        <button onClick={() => navigate(`/teams/${team.id}`)}>
+                            Voir les détails
+                        </button>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
