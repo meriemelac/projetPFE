@@ -9,6 +9,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,9 @@ Route::get('/departments', [DepartmentController::class, 'index']);
 
 //Projects
 Route::get('/projects', [ProjectController::class, 'index']);
+Route::get('/projects/{id}', [ProjectController::class, 'show']);
+Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
+
 
 //Team
 Route::get('/teams', [TeamController::class, 'index']);
@@ -47,3 +51,6 @@ Route::get('/teams/{id}', [TeamController::class, 'show']);
 //Task
 Route::get('/tasks', [TaskController::class, 'index']);
 Route::get('/tasks/{id}', [TaskController::class, 'show']);
+
+//Comments
+Route::get('/tasks/{id}/comments', [CommentController::class, 'getCommentsForTask']);

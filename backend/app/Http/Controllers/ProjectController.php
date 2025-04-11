@@ -15,4 +15,22 @@ class ProjectController extends Controller
             'projects' => $projects,
         ]);
     }
+
+    public function show($id): JsonResponse
+    {
+        $project = Project::with(['manager', 'creator', 'team'])->findOrFail($id);
+
+        return response()->json([
+            'project' => $project
+        ]);
+    }
+
+    public function members($id): JsonResponse
+    {
+        $project = Project::with('members')->findOrFail($id);
+
+        return response()->json([
+            'members' => $project->members
+        ]);
+    }
 }
