@@ -8,6 +8,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +44,6 @@ Route::get('/projects', [ProjectController::class, 'index']);
 Route::get('/teams', [TeamController::class, 'index']);
 Route::get('/teams/{id}', [TeamController::class, 'show']);
 
+//Task
+Route::get('/tasks', [TaskController::class, 'index']);
+Route::get('/tasks/{id}', [TaskController::class, 'show']);
