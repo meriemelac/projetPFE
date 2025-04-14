@@ -10,7 +10,7 @@ import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
 import Projects from "./components/Projects"
 import ProjectDetails from "./components/ProjectDetails"
-import Teams from "./components/Projects"
+import Teams from "./components/Teams"
 import TeamDetails from "./components/TeamDetails";
 import Tasks from "./components/Tasks"
 import TaskDetails from "./components/TaskDetails";
