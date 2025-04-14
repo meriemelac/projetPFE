@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CommentSeeder::class,
             ProjectMemberSeeder::class,
             PermissionSeeder::class,
+            PermissionRoleSeeder::class,
         ]);
     }
 }

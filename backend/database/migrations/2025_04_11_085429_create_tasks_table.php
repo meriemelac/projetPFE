@@ -17,6 +17,7 @@ class CreateTasksTable extends Migration
             $table->date('due_date')->nullable();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('created_by')->constrained('employees')->onDelete('cascade');
+            $table->unsignedInteger('position')->default(0); //pour le drag ad drop
             $table->timestamps();
         });
     }

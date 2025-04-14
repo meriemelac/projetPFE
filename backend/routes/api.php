@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProjectController;
@@ -31,6 +32,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
+//Employees
+Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');
+
+
 //Notifications
 Route::get('/notifications', [NotificationController::class, 'index']);
 
@@ -49,8 +54,18 @@ Route::get('/teams', [TeamController::class, 'index']);
 Route::get('/teams/{id}', [TeamController::class, 'show']);
 
 //Task
-Route::get('/tasks', [TaskController::class, 'index']);
-Route::get('/tasks/{id}', [TaskController::class, 'show']);
+// Tâches (API REST + Drag & Drop + Assignation)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/projects/{projectId}/tasks', [TaskController::class, 'index']);
+    Route::get('/tasks/{id}', [TaskController::class, 'show']);
+    Route::post('/tasks', [TaskController::class, 'store']);
+    Route::put('/tasks/{task}', [TaskController::class, 'update']);
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+    Route::put('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
+    Route::post('/tasks/{task}/assign', [TaskController::class, 'assignEmployees']);
+    // Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
+});
+
 
 //Comments
 Route::get('/tasks/{id}/comments', [CommentController::class, 'getCommentsForTask']);
