@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             TaskSeeder::class,
             CommentSeeder::class,
-            ProjectMemberSeeder::class
+            ProjectMemberSeeder::class,
+            PermissionSeeder::class,
         ]);
     }
 }
