@@ -21,7 +21,7 @@ function Navbar() {
             <div className="flex items-center space-x-6">
                 <Avatar.Root>
                     <Avatar.Fallback name="Segun Adebayo" />
-                    <Avatar.Image src="https://bit.ly/sage-adebayo" />
+                    <Avatar.Image src="" />
                 </Avatar.Root>
                 <Link to="/notifications" className="text-gray-600 hover:text-blue-600">Mes notifications</Link>
                 <Link to="/profile" className="text-gray-600 hover:text-blue-600">Mon profil</Link>
