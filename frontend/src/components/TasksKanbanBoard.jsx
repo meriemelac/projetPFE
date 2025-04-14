@@ -3,11 +3,14 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import axiosInstance from "../api/api";
 import { useParams } from "react-router-dom";
 import AddTaskModal from "./AddTaskModal";
+import TaskDetailsModal from "./TaskDetailsModal";
+
 
 
 function TasksKanbanBoard() {
     const { projectId } = useParams();
     const [showAddModal, setShowAddModal] = useState(false);
+    const [selectedTaskId, setSelectedTaskId] = useState(null);
 
     const [columns, setColumns] = useState({
         todo: { name: "À faire", tasks: [] },
@@ -17,7 +20,7 @@ function TasksKanbanBoard() {
     });
 
     useEffect(() => {
-        axiosInstance.get(`/projects/${projectId}/tasks`)
+        axiosInstance.get(`/projects/${projectId}/my-tasks`)
             .then(res => {
                 const tasksByStatus = {
                     todo: [],
@@ -124,6 +127,7 @@ function TasksKanbanBoard() {
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
+                                                    onClick={() => setSelectedTaskId(task.id)}
                                                 >
                                                     <p className="font-medium">{task.title}</p>
                                                     <p className="text-sm text-gray-500">{task.priority}</p>
@@ -138,6 +142,12 @@ function TasksKanbanBoard() {
                     ))}
                 </div>
             </DragDropContext>
+            {selectedTaskId && (
+                <TaskDetailsModal
+                    taskId={selectedTaskId}
+                    onClose={() => setSelectedTaskId(null)}
+                />
+            )}
         </>
     );
 }

@@ -11,7 +11,7 @@ function Sidebar() {
                 {user ? <h1>Hello, {user.first_name} {user.last_name}!</h1> : <h1>Hello</h1>}
             </div>
             <ul>
-                <li><Link to="/">Accueil</Link></li>
+                <li><Link to="/">Dashboard</Link></li>
                 <li><Link to="/departments">Departments</Link></li>
                 <li><Link to="/projects">Projets</Link></li>
                 <li><Link to="/teams">Teams</Link></li>
