@@ -44,7 +44,7 @@ class TaskController extends Controller
 
         $validated['created_by'] = auth()->id();
         $validated['position'] = Task::where('project_id', $validated['project_id'])
-                                    ->where('status', $validated['status'])->count();
+            ->where('status', $validated['status'])->count();
 
         $task = Task::create($validated);
         return response()->json($task, 201);
@@ -55,7 +55,11 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $task->update($request->only([
-            'title', 'description', 'status', 'priority', 'due_date'
+            'title',
+            'description',
+            'status',
+            'priority',
+            'due_date'
         ]));
 
         return response()->json($task);
@@ -91,5 +95,21 @@ class TaskController extends Controller
     {
         Task::destroy($id);
         return response()->json(['message' => 'Tâche supprimée']);
+    }
+
+    public function myTasksByProject($projectId)
+    {
+        $userId = auth()->id();
+
+        $tasks = Task::with(['employees', 'creator', 'project'])
+            ->where('project_id', $projectId)
+            ->whereHas('employees', function ($query) use ($userId) {
+                $query->where('employee_id', $userId);
+            })
+            ->orderBy('status')
+            ->orderBy('position')
+            ->get();
+
+        return response()->json($tasks);
     }
 }

@@ -64,8 +64,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
     Route::post('/tasks/{task}/assign', [TaskController::class, 'assignEmployees']);
     // Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
+    Route::get('/projects/{projectId}/my-tasks', [TaskController::class, 'myTasksByProject']);
 });
 
 
 //Comments
-Route::get('/tasks/{id}/comments', [CommentController::class, 'getCommentsForTask']);
+Route::get('/tasks/{taskId}/comments', [CommentController::class, 'getCommentsForTask'])->middleware('auth:sanctum');
+Route::post('/tasks/{taskId}/comments', [CommentController::class, 'store'])->middleware('auth:sanctum');
+
