@@ -31,6 +31,10 @@ const Projects = () => {
 
     return (
         <div>
+            <button onClick={() => navigate("/projects/create")} className="mb-4 bg-green-600 text-white px-4 py-2 rounded">
+                + Ajouter un projet
+            </button>
+
             <h2>projects</h2>
             {projects.length > 0 ? (
                 <ul>
