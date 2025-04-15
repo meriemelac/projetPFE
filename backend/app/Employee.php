@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Task; 
 
 class Employee extends Authenticatable
 {
@@ -77,5 +78,10 @@ class Employee extends Authenticatable
         return $this->belongsToMany(Project::class, 'project_members')
             ->withPivot('role')
             ->withTimestamps();
+    }
+    
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'employee_task');
     }
 }

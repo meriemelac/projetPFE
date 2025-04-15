@@ -47,6 +47,7 @@ Route::get('/departments', [DepartmentController::class, 'index']);
 Route::get('/projects', [ProjectController::class, 'index']);
 Route::get('/projects/{id}', [ProjectController::class, 'show']);
 Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
+Route::post('/projects', [ProjectController::class, 'store'])->middleware('auth:sanctum');
 
 
 //Team
