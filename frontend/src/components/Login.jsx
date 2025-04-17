@@ -19,7 +19,7 @@ const Login = () => {
             const response = await axiosInstance.post("/login", { email, password });
 
             // Sauvegarde du token et mise à jour de l'état global
-            login(response.data.token, response.data.user.first_name, response.data.user.last_name );
+            login(response.data.token, response.data.user.first_name, response.data.user.last_name, response.data.user.role_id  );
             
             // Redirection vers la page d'accueil après connexion
             navigate("/");

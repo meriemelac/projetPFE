@@ -11,13 +11,20 @@ export const AuthProvider = ({ children }) => {
     );
 
     // Fonction pour se connecter
-    const login = (token, first_name, last_name) => {
+    const login = (token, first_name, last_name, role_id) => {
         localStorage.setItem("token", token);
-        const userData = { first_name, last_name };
+    
+        const userData = {
+            first_name,
+            last_name,
+            role_id
+        };
+    
         localStorage.setItem("user", JSON.stringify(userData));
         setUser(userData);
         setIsAuthenticated(true);
     };
+    
 
     // Fonction pour se déconnecter
     const logout = () => {

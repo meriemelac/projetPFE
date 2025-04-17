@@ -7,6 +7,8 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
 import EmployeesList from "./components/EmployeesList";
+import CreateEmployee  from "./components/CreateEmployee";
+import EditEmployee   from "./components/EditEmployee";
 import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
 import Projects from "./components/Projects"
@@ -54,6 +56,8 @@ export const routes = [
             { path: '/tasks', element: <TasksByProjects /> },
             { path: "/projects/:projectId/tasks", element: <TasksKanban />},
             { path: "/employees", element: <EmployeesList />},
+            { path: "/employees/create", element: <CreateEmployee  />},
+            { path: "/employees/:id/edit", element: <EditEmployee   />},
         ],
     },
 
