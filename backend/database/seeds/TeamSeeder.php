@@ -2,27 +2,26 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class TeamSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
+        DB::table('teams')->truncate();
+
         DB::table('teams')->insert([
-            [
-                'name' => 'Équipe Backend',
-                'description' => 'Responsable des API et de la logique métier.',
-                'department_id' => 1, // Assure-toi que le département avec ID 1 existe
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Équipe Frontend',
-                'description' => 'Responsable de l’interface utilisateur.',
-                'department_id' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]
+            ['id' => 1, 'name' => 'Backend', 'department_id' => 1],
+            ['id' => 2, 'name' => 'Frontend', 'department_id' => 1],
+            ['id' => 3, 'name' => 'Recrutement', 'department_id' => 2],
+            ['id' => 4, 'name' => 'Formation RH', 'department_id' => 2],
+            ['id' => 5, 'name' => 'Communication', 'department_id' => 3],
+            ['id' => 6, 'name' => 'Contenu Digital', 'department_id' => 3],
         ]);
+        
     }
 }

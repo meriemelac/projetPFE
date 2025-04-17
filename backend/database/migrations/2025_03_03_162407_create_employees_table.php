@@ -23,6 +23,7 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->foreignId('department_id')->nullable()->constrained()->onDelete('set null'); // ← Ajout ici
+            $table->foreignId('team_id')->nullable()->constrained()->onDelete('set null');
             $table->string('profile_picture')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->date('hire_date');

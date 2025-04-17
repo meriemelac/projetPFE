@@ -37,8 +37,6 @@ class Project extends Model
 
     public function members()
     {
-        return $this->belongsToMany(Employee::class, 'project_members')
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsToMany(Employee::class, 'project_members');
     }
 }

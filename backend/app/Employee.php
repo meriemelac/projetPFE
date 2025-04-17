@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Task; 
+use App\Task;
 
 class Employee extends Authenticatable
 {
@@ -48,9 +48,9 @@ class Employee extends Authenticatable
         return $this->belongsTo(Department::class);
     }
 
-    public function teams()
+    public function team()
     {
-        return $this->belongsToMany(Team::class, 'employee_team');
+        return $this->belongsTo(Team::class);
     }
 
     public function projectsManaged()
@@ -75,11 +75,10 @@ class Employee extends Authenticatable
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'project_members')
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsToMany(Project::class, 'project_members');
     }
-    
+
+
     public function tasks()
     {
         return $this->belongsToMany(Task::class, 'employee_task');

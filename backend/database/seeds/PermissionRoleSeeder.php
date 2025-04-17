@@ -10,7 +10,16 @@ class PermissionRoleSeeder extends Seeder
     {
         $permissionsByRole = [
             'admin' => Permission::all()->pluck('id')->toArray(),
-
+        
+            'department_leader' => [
+                'view_departments',
+                'view_employees',
+                'view_teams',
+                'view_projects',
+                'view_tasks',
+                'view_comments',
+            ],
+        
             'team_leader' => [
                 'view_employees',
                 'view_teams',
@@ -20,7 +29,7 @@ class PermissionRoleSeeder extends Seeder
                 'assign_task',
                 'view_comments',
             ],
-
+        
             'project_leader' => [
                 'view_projects',
                 'create_project',
@@ -38,7 +47,7 @@ class PermissionRoleSeeder extends Seeder
                 'add_comment',
                 'delete_comment',
             ],
-
+        
             'employee' => [
                 'view_projects',
                 'view_tasks',
@@ -46,6 +55,7 @@ class PermissionRoleSeeder extends Seeder
                 'add_comment',
             ]
         ];
+        
 
         foreach ($permissionsByRole as $roleName => $permissionNamesOrIds) {
             $role = Role::where('name', $roleName)->first();

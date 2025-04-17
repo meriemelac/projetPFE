@@ -11,6 +11,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,10 @@ Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 //Employees
 Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/employees', [EmployeeController::class, 'store'])->middleware(['auth:sanctum', 'role:1,2']);
+Route::get('/employees/{id}', [EmployeeController::class, 'show'])->middleware(['auth:sanctum', 'role:1,2']);
+Route::put('/employees/{id}', [EmployeeController::class, 'update'])->middleware(['auth:sanctum', 'role:1,2']);
+Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->middleware(['auth:sanctum', 'role:1,2']);
 
 
 //Notifications
@@ -41,7 +46,7 @@ Route::get('/notifications', [NotificationController::class, 'index']);
 
 
 //Departements
-Route::get('/departments', [DepartmentController::class, 'index']);
+Route::get('/departments', [DepartmentController::class, 'index'])->middleware('auth:sanctum');
 
 //Projects
 Route::get('/projects', [ProjectController::class, 'index']);
@@ -53,6 +58,7 @@ Route::post('/projects', [ProjectController::class, 'store'])->middleware('auth:
 //Team
 Route::get('/teams', [TeamController::class, 'index']);
 Route::get('/teams/{id}', [TeamController::class, 'show']);
+Route::get('/departments/{id}/teams', [DepartmentController::class, 'getTeams']);
 
 //Task
 // Tâches (API REST + Drag & Drop + Assignation)
@@ -73,3 +79,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/tasks/{taskId}/comments', [CommentController::class, 'getCommentsForTask'])->middleware('auth:sanctum');
 Route::post('/tasks/{taskId}/comments', [CommentController::class, 'store'])->middleware('auth:sanctum');
 
+//Roles
+Route::get('/roles', [RoleController::class, 'index']);
