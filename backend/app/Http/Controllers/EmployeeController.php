@@ -41,7 +41,7 @@ class EmployeeController extends Controller
             //     })->get();
             //     break;
 
-            case 5: // Employé
+            case 4: // Employé
                 $employees = Employee::where('team_id', $user->team_id)
                     ->with('role', 'department', 'team')
                     ->get();

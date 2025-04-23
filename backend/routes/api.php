@@ -35,9 +35,9 @@ Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 //Employees
 Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');
-Route::post('/employees', [EmployeeController::class, 'store'])->middleware(['auth:sanctum', 'role:1,2']);
+Route::post('/employees', [EmployeeController::class, 'store'])->middleware(['auth:sanctum', 'role:1,2', 'check.assignable.role']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show'])->middleware(['auth:sanctum', 'role:1,2']);
-Route::put('/employees/{id}', [EmployeeController::class, 'update'])->middleware(['auth:sanctum', 'role:1,2']);
+Route::put('/employees/{id}', [EmployeeController::class, 'update'])->middleware(['auth:sanctum', 'role:1,2', 'check.assignable.role']);
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->middleware(['auth:sanctum', 'role:1,2']);
 
 
@@ -46,19 +46,45 @@ Route::get('/notifications', [NotificationController::class, 'index']);
 
 
 //Departements
-Route::get('/departments', [DepartmentController::class, 'index'])->middleware('auth:sanctum');
+// Accessible à tous les employés
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/departments', [DepartmentController::class, 'index']);
+});
+// Accessible uniquement à l'admin
+Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+    Route::get('/departments/{id}', [DepartmentController::class, 'show']);
+    Route::post('/departments', [DepartmentController::class, 'store']);
+    Route::put('/departments/{id}', [DepartmentController::class, 'update']);
+    Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
+});
+
 
 //Projects
-Route::get('/projects', [ProjectController::class, 'index']);
-Route::get('/projects/{id}', [ProjectController::class, 'show']);
-Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
-Route::post('/projects', [ProjectController::class, 'store'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/projects/{id}', [ProjectController::class, 'show']);
+    Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
+    Route::get('/projects/available-managers', [ProjectController::class, 'availableManagers']);
+    
+    // restreint aux rôles 1, 2, 3 — la logique est déjà dans le controller
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::put('/projects/{id}', [ProjectController::class, 'update']);
+    Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+});
 
 
-//Team
-Route::get('/teams', [TeamController::class, 'index']);
-Route::get('/teams/{id}', [TeamController::class, 'show']);
-Route::get('/departments/{id}/teams', [DepartmentController::class, 'getTeams']);
+//Team// Toutes les routes nécessitent une authentification
+Route::middleware('auth:sanctum')->group(function () {
+    
+    // Tous les utilisateurs peuvent voir la liste des équipes accessibles et leurs équipes
+    Route::get('/teams', [TeamController::class, 'index']);
+    Route::get('/teams/{id}', [TeamController::class, 'show']);
+    Route::get('/departments/{id}/teams', [DepartmentController::class, 'getTeams']);
+    // Routes réservées à l'admin et au chef de département
+    Route::post('/teams', [TeamController::class, 'store']);
+    Route::put('/teams/{id}', [TeamController::class, 'update']);
+    Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+});
 
 //Task
 // Tâches (API REST + Drag & Drop + Assignation)
