@@ -11,12 +11,16 @@ import CreateEmployee  from "./components/CreateEmployee";
 import EditEmployee   from "./components/EditEmployee";
 import Notifications from "./components/Notifications"
 import Departments from "./components/departments"
+import CreateDepartment from "./components/CreateDepartment";
+import EditDepartment  from "./components/EditDepartment";
 import Projects from "./components/Projects"
 import ProjectDetails from "./components/ProjectDetails"
 import CreateProject from "./components/CreateProject"
 import Teams from "./components/Teams"
 import TeamDetails from "./components/TeamDetails";
-import TasksKanban from "./components/TasksKanbanBoard"
+import EditTeam  from "./components/EditTeam";
+import CreateTeam  from "./components/CreateTeam";
+import TasksKanban from "./components/TasksKanbanBoard";
 import TasksByProjects from "./components/TaskByProjects";
 
 import Test from "./components/test";
@@ -48,11 +52,15 @@ export const routes = [
             { path: '/profile', element: <MyProfile /> },
             { path: '/notifications', element: <Notifications /> },
             { path: '/departments', element: <Departments /> },
+            { path: '/departments/create', element: <CreateDepartment /> },
+            { path: '/departments/edit/:id', element: <EditDepartment /> },
             { path: '/projects', element: <Projects /> },
             { path: '/projects/:id', element: <ProjectDetails /> },
             { path: '/projects/create', element: <CreateProject />},
             { path: '/teams', element: <Teams /> },
             { path: "/teams/:id", element: <TeamDetails />},
+            { path: "/teams/create", element: <CreateTeam  />},
+            { path: "/teams/edit/:id", element: <EditTeam   />},
             { path: '/tasks', element: <TasksByProjects /> },
             { path: "/projects/:projectId/tasks", element: <TasksKanban />},
             { path: "/employees", element: <EmployeesList />},

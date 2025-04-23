@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Avatar, AvatarGroup } from "@chakra-ui/react"
+import $ from 'jquery';
 
 function Navbar() {
     const { logout } = useContext(AuthContext);
@@ -12,26 +12,33 @@ function Navbar() {
         navigate("/login");
     };
 
-    return (
-        <nav className="flex items-center justify-between px-6 py-4">
-            {/* Logo / Nom de l'application */}
-            <h1 className="text-xl font-bold">Mon Application</h1>
+    useEffect(() => {
+        // Le code jQuery doit être dans useEffect pour éviter d’être réexécuté à chaque render
+        $(".toggle").on("click", function () {
+            $(".item").toggleClass("active");
+        });
 
-            {/* Liens + bouton déconnexion */}
-            <div className="flex items-center space-x-6">
-                <Avatar.Root>
-                    <Avatar.Fallback name="Segun Adebayo" />
-                    <Avatar.Image src="" />
-                </Avatar.Root>
-                <Link to="/notifications" className="text-gray-600 hover:text-blue-600">Mes notifications</Link>
-                <Link to="/profile" className="text-gray-600 hover:text-blue-600">Mon profil</Link>
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
-                >
-                    Se déconnecter
-                </button>
-            </div>
+        // Nettoyage à la désactivation du composant
+        return () => {
+            $(".toggle").off("click");
+        };
+    }, []);
+
+    return (
+        <nav>
+            <ul className='menu'>
+                <li className='logo text-white'><Link to="#">Taskwave</Link></li>
+                <li className='item text-white'><Link to="/notifications">Mes notifications</Link></li>
+                <li className='item text-white'><Link to="/profile">Mon profil</Link></li>
+                <li className='item text-white'>
+                    <Link to="/login" onClick={handleLogout}>
+                        Se déconnecter
+                    </Link>
+                </li>
+                <li className='item button text-white'><a href="#">incase</a></li>
+                <li className='item button secondary text-white'><a href="#">incase2</a></li>
+                <li className='toggle text-white'><span className='bars'></span></li>
+            </ul>
         </nav>
     );
 }

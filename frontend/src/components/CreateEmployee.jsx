@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 
 const CreateEmployee = () => {
+    const { user } = useContext(AuthContext);
+    const userRole = user?.role_id;
     const [departments, setDepartments] = useState([]);
     const [teams, setTeams] = useState([]);
     const [roles, setRoles] = useState([]);
@@ -26,17 +31,36 @@ const CreateEmployee = () => {
             try {
                 const depRes = await axiosInstance.get("/departments");
                 const roleRes = await axiosInstance.get("/roles");
-
-                setDepartments(depRes.data.departments); // ✅ c’est ici la clé
-                setRoles(roleRes.data); // ✅ déjà un tableau
-
+    
+                const allRoles = roleRes.data; // tableau de rôles
+    
+                // 👇 filtrage en fonction du rôle connecté
+                const filteredRoles = allRoles.filter(role => {
+                    if (userRole === "1") return true; // admin → tous
+                    if (userRole === "2") return [3, 4].includes(role.id); // chef de département → Team Leader + Employee
+                    return false; // autres → aucun
+                });
+    
+                setDepartments(depRes.data.departments);
+                setRoles(filteredRoles);
+    
             } catch (error) {
                 console.error("Erreur chargement départements/roles :", error);
             }
         };
+    
         fetchData();
-    }, []);
-
+    }, [userRole]); // ⬅️ important : ajouter `userRole` comme dépendance
+    
+    useEffect(() => {
+        if (departments.length === 1) {
+            setFormData(prev => ({
+                ...prev,
+                department_id: departments[0].id
+            }));
+        }
+    }, [departments]);
+    
 
     // Charger les équipes selon le département
     useEffect(() => {
