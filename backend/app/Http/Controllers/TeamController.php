@@ -25,12 +25,14 @@ class TeamController extends Controller
                 break;
 
             default: // Employé, Chef de projet, etc.
-                $teams = $user->teams()->with('department')->get();
+                $team = $user->team()->with('department')->first();
+                $teams = $team ? collect([$team]) : collect(); // on retourne une collection même si une seule team
                 break;
         }
 
         return response()->json(['teams' => $teams]);
     }
+
 
     public function show($id): JsonResponse
     {

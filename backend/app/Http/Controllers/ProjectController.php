@@ -11,11 +11,41 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     public function index(): JsonResponse
-    {
-        $projects = Project::with(['manager', 'creator'])->latest()->get();
+{
+    $user = Auth::user();
 
-        return response()->json(['projects' => $projects]);
+    switch ($user->role_id) {
+        case 1: // Admin (voit tout)
+            $projects = Project::with(['manager', 'creator'])->latest()->get();
+            break;
+
+        case 2: // Chef de département : projets qui impliquent une team de son département
+            $projects = Project::whereHas('members.team', function ($query) use ($user) {
+                $query->where('department_id', $user->department_id);
+            })->with(['manager', 'creator'])->latest()->get();
+            break;
+
+        case 3: // Chef d’équipe : projets qui impliquent un membre de son équipe
+            $projects = Project::whereHas('members', function ($query) use ($user) {
+                $query->where('team_id', $user->team_id);
+            })->with(['manager', 'creator'])->latest()->get();
+            break;
+
+        case 4: // Employé : projets où il est lui-même membre
+            $projects = Project::whereHas('members', function ($query) use ($user) {
+                $query->where('employee_id', $user->id);
+            })->with(['manager', 'creator'])->latest()->get();
+            break;
+
+        default:
+            $projects = collect(); // vide si rôle inconnu
     }
+
+    return response()->json(['projects' => $projects]);
+}
+
+
+
 
     public function show($id): JsonResponse
     {
