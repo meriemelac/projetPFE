@@ -15,6 +15,7 @@ import CreateDepartment from "./components/CreateDepartment";
 import EditDepartment  from "./components/EditDepartment";
 import Projects from "./components/Projects"
 import ProjectDetails from "./components/ProjectDetails"
+import EditProject from "./components/EditProject"
 import CreateProject from "./components/CreateProject"
 import Teams from "./components/Teams"
 import TeamDetails from "./components/TeamDetails";
@@ -57,6 +58,7 @@ export const routes = [
             { path: '/projects', element: <Projects /> },
             { path: '/projects/:id', element: <ProjectDetails /> },
             { path: '/projects/create', element: <CreateProject />},
+            { path: '/projects/edit/:id', element: <EditProject  />},
             { path: '/teams', element: <Teams /> },
             { path: "/teams/:id", element: <TeamDetails />},
             { path: "/teams/create", element: <CreateTeam  />},
