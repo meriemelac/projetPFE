@@ -11,38 +11,38 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     public function index(): JsonResponse
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    switch ($user->role_id) {
-        case 1: // Admin (voit tout)
-            $projects = Project::with(['manager', 'creator'])->latest()->get();
-            break;
+        switch ($user->role_id) {
+            case 1: // Admin (voit tout)
+                $projects = Project::with(['manager', 'creator'])->latest()->get();
+                break;
 
-        case 2: // Chef de département : projets qui impliquent une team de son département
-            $projects = Project::whereHas('members.team', function ($query) use ($user) {
-                $query->where('department_id', $user->department_id);
-            })->with(['manager', 'creator'])->latest()->get();
-            break;
+            case 2: // Chef de département : projets qui impliquent une team de son département
+                $projects = Project::whereHas('members.team', function ($query) use ($user) {
+                    $query->where('department_id', $user->department_id);
+                })->with(['manager', 'creator'])->latest()->get();
+                break;
 
-        case 3: // Chef d’équipe : projets qui impliquent un membre de son équipe
-            $projects = Project::whereHas('members', function ($query) use ($user) {
-                $query->where('team_id', $user->team_id);
-            })->with(['manager', 'creator'])->latest()->get();
-            break;
+            case 3: // Chef d’équipe : projets qui impliquent un membre de son équipe
+                $projects = Project::whereHas('members', function ($query) use ($user) {
+                    $query->where('team_id', $user->team_id);
+                })->with(['manager', 'creator'])->latest()->get();
+                break;
 
-        case 4: // Employé : projets où il est lui-même membre
-            $projects = Project::whereHas('members', function ($query) use ($user) {
-                $query->where('employee_id', $user->id);
-            })->with(['manager', 'creator'])->latest()->get();
-            break;
+            case 4: // Employé : projets où il est lui-même membre
+                $projects = Project::whereHas('members', function ($query) use ($user) {
+                    $query->where('employee_id', $user->id);
+                })->with(['manager', 'creator'])->latest()->get();
+                break;
 
-        default:
-            $projects = collect(); // vide si rôle inconnu
+            default:
+                $projects = collect(); // vide si rôle inconnu
+        }
+
+        return response()->json(['projects' => $projects]);
     }
-
-    return response()->json(['projects' => $projects]);
-}
 
 
 
@@ -69,7 +69,10 @@ class ProjectController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'manager_id' => 'required|exists:employees,id',
             'team_id' => 'nullable|exists:teams,id',
+            'employee_ids' => 'nullable|array',
+            'employee_ids.*' => 'exists:employees,id',
         ]);
+
 
         $project = Project::create([
             'title' => $validated['title'],
@@ -80,6 +83,10 @@ class ProjectController extends Controller
             'team_id' => $validated['team_id'] ?? null,
             'created_by' => $user->id,
         ]);
+
+        if ($request->has('employee_ids')) {
+            $project->members()->sync($validated['employee_ids']);
+        }
 
         return response()->json([
             'message' => 'Projet créé avec succès.',
@@ -103,7 +110,10 @@ class ProjectController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'manager_id' => 'required|exists:employees,id',
             'team_id' => 'nullable|exists:teams,id',
+            'employee_ids' => 'nullable|array',
+            'employee_ids.*' => 'exists:employees,id',
         ]);
+
 
         $project->update([
             'title' => $validated['title'],
@@ -113,6 +123,11 @@ class ProjectController extends Controller
             'manager_id' => $validated['manager_id'],
             'team_id' => $validated['team_id'] ?? null,
         ]);
+
+        if ($request->has('employee_ids')) {
+            $project->members()->sync($validated['employee_ids']);
+        }
+
 
         return response()->json([
             'message' => 'Projet mis à jour avec succès.',
@@ -155,10 +170,34 @@ class ProjectController extends Controller
                 break;
 
             case 3: // Chef d’équipe
-                $employees = Employee::whereHas('teams', function ($query) use ($user) {
-                    $query->whereIn('teams.id', $user->teams->pluck('id'));
-                })->get();
+                $employees = Employee::where('team_id', $user->team_id)->get();
                 break;
+
+
+            default:
+                $employees = collect();
+        }
+
+        return response()->json(['employees' => $employees]);
+    }
+
+    public function availableMembers(): JsonResponse
+    {
+        $user = Auth::user();
+
+        switch ($user->role_id) {
+            case 1: // Admin
+                $employees = Employee::select('id', 'first_name', 'last_name')->get();
+                break;
+
+            case 2: // Chef de département
+                $employees = Employee::where('department_id', $user->department_id)->get();
+                break;
+
+            case 3: // Chef d’équipe
+                $employees = Employee::where('team_id', $user->team_id)->get();
+                break;
+
 
             default:
                 $employees = collect();

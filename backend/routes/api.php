@@ -62,9 +62,10 @@ Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
 //Projects
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/projects/available-managers', [ProjectController::class, 'availableManagers']);
+    Route::get('/projects/available-members', [ProjectController::class, 'availableMembers']);
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
     Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
-    Route::get('/projects/available-managers', [ProjectController::class, 'availableManagers']);
     
     // restreint aux rôles 1, 2, 3 — la logique est déjà dans le controller
     Route::post('/projects', [ProjectController::class, 'store']);
