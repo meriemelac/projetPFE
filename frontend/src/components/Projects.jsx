@@ -9,8 +9,9 @@ const Projects = () => {
     const navigate = useNavigate();
 
     // Supposons que le role_id est stocké dans le localStorage
-    const roleId = parseInt(localStorage.getItem("role_id"), 10);
-    const canManage = [1, 2, 3].includes(roleId); // rôles autorisés
+    const user = JSON.parse(localStorage.getItem("user"));
+    const roleId = user?.role_id;
+    const canManage = ["1", "2", "3"].includes(roleId);
 
     useEffect(() => {
         fetchProjects();
@@ -63,7 +64,7 @@ const Projects = () => {
                             <div className="space-x-2 mt-2">
                                 <button
                                     onClick={() => navigate(`/projects/${proj.id}`)}
-                                    className="bg-blue-500 px-3 py-1 rounded"
+                                    className="bg-blue-500 px-3 py-1 rounded "
                                 >
                                     Voir détails
                                 </button>
@@ -72,13 +73,13 @@ const Projects = () => {
                                     <>
                                         <button
                                             onClick={() => navigate(`/projects/edit/${proj.id}`)}
-                                            className="bg-yellow-500 px-3 py-1 rounded"
+                                            className="bg-yellow-500 px-3 py-1 rounded "
                                         >
                                             Modifier
                                         </button>
                                         <button
                                             onClick={() => handleDelete(proj.id)}
-                                            className="bg-red-600 px-3 py-1 rounded "
+                                            className="bg-red-600 px-3 py-1 rounded"
                                         >
                                             Supprimer
                                         </button>

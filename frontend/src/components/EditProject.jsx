@@ -11,18 +11,28 @@ const EditProject = () => {
         description: "",
         start_date: "",
         end_date: "",
+        status: "planned",
+        manager_id: "",
+        team_id: "",
+        employee_ids: [],
     });
 
-    const [members, setMembers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [managers, setManagers] = useState([]);
+    const [allEmployees, setAllEmployees] = useState([]);
+    const [selectedMembers, setSelectedMembers] = useState([]);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
                 const response = await axiosInstance.get(`/projects/${id}`);
-                const { title, description, start_date, end_date } = response.data.project;
-                setFormData({ title, description, start_date, end_date });
+                const { title, description, start_date, end_date, status, manager_id, team_id } = response.data.project;
+                setFormData(prev => ({
+                    ...prev,
+                    title, description, start_date, end_date, status,
+                    manager_id, team_id: team_id ?? ""
+                }));
             } catch (err) {
                 setError("Erreur lors du chargement du projet.");
             } finally {
@@ -30,22 +40,61 @@ const EditProject = () => {
             }
         };
 
+        const fetchManagers = async () => {
+            try {
+                const response = await axiosInstance.get("/projects/available-managers");
+                setManagers(response.data.employees);
+            } catch (err) {
+                console.error("Erreur chargement des managers :", err);
+            }
+        };
+
         const fetchMembers = async () => {
             try {
                 const response = await axiosInstance.get(`/projects/${id}/members`);
-                setMembers(response.data.members);
+                setSelectedMembers(response.data.members);
+                setFormData(prev => ({
+                    ...prev,
+                    employee_ids: response.data.members.map(m => m.id.toString())
+                }));
             } catch (err) {
-                console.error("Erreur chargement des membres.");
+                console.error("Erreur chargement des membres du projet :", err);
+            }
+        };
+
+        const fetchAllEmployees = async () => {
+            try {
+                const response = await axiosInstance.get("/projects/available-members");
+                setAllEmployees(response.data.employees);
+            } catch (err) {
+                console.error("Erreur chargement des employés :", err);
             }
         };
 
         fetchProject();
+        fetchManagers();
         fetchMembers();
+        fetchAllEmployees();
     }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleEmployeeSelect = (e) => {
+        const selectedIds = Array.from(e.target.selectedOptions).map(option => option.value);
+        setFormData(prev => ({ ...prev, employee_ids: selectedIds }));
+        const selectedEmpObjects = allEmployees.filter(emp => selectedIds.includes(emp.id.toString()));
+        setSelectedMembers(selectedEmpObjects);
+    };
+
+    const handleRemoveMember = (memberId) => {
+        setSelectedMembers(prev => prev.filter(m => m.id !== memberId));
+        setFormData(prev => ({
+            ...prev,
+            employee_ids: prev.employee_ids.filter(id => id !== memberId.toString())
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -56,7 +105,7 @@ const EditProject = () => {
             await axiosInstance.put(`/projects/${id}`, formData);
             navigate("/projects");
         } catch (err) {
-            setError(err.response?.data?.message || "Erreur lors de la mise à jour.");
+            setError(err.response?.data?.message || "Erreur lors de la mise à jour du projet.");
         }
     };
 
@@ -74,7 +123,7 @@ const EditProject = () => {
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    placeholder="Titre"
+                    placeholder="Titre du projet"
                     className="w-full border px-3 py-2 rounded"
                     required
                 />
@@ -85,6 +134,17 @@ const EditProject = () => {
                     placeholder="Description"
                     className="w-full border px-3 py-2 rounded"
                 />
+                <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                    className="w-full border px-3 py-2 rounded"
+                >
+                    <option value="planned">Planned</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
                 <input
                     type="date"
                     name="start_date"
@@ -99,6 +159,64 @@ const EditProject = () => {
                     onChange={handleChange}
                     className="w-full border px-3 py-2 rounded"
                 />
+                <select
+                    name="manager_id"
+                    value={formData.manager_id}
+                    onChange={handleChange}
+                    className="w-full border px-3 py-2 rounded"
+                    required
+                >
+                    <option value="">-- Sélectionner un manager --</option>
+                    {managers.map((manager) => (
+                        <option key={manager.id} value={manager.id}>
+                            {manager.first_name} {manager.last_name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="number"
+                    name="team_id"
+                    value={formData.team_id}
+                    placeholder="ID de l'équipe (optionnel)"
+                    onChange={handleChange}
+                    className="w-full border px-3 py-2 rounded"
+                />
+
+                <select
+                    multiple
+                    name="employee_ids"
+                    value={formData.employee_ids}
+                    onChange={handleEmployeeSelect}
+                    className="w-full border px-3 py-2 rounded"
+                >
+                    {allEmployees.map((emp) => (
+                        <option key={emp.id} value={emp.id}>
+                            {emp.first_name} {emp.last_name}
+                        </option>
+                    ))}
+                </select>
+
+                <div className="mt-4">
+                    <h4 className="font-semibold">Membres sélectionnés :</h4>
+                    {selectedMembers.length > 0 ? (
+                        <ul className="list-disc pl-5">
+                            {selectedMembers.map(member => (
+                                <li key={member.id} className="flex items-center justify-between">
+                                    <span>{member.first_name} {member.last_name}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveMember(member.id)}
+                                        className="text-red-500 text-sm ml-2"
+                                    >
+                                        Supprimer
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="text-gray-500">Aucun membre sélectionné.</p>
+                    )}
+                </div>
 
                 <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded">
                     Enregistrer les modifications
@@ -111,22 +229,6 @@ const EditProject = () => {
                     Annuler
                 </button>
             </form>
-
-            <div className="mt-6">
-                <h3 className="font-semibold mb-2">Membres affectés :</h3>
-                {members.length > 0 ? (
-                    <ul className="list-disc pl-5">
-                        {members.map((member) => (
-                            <li key={member.id}>
-                                {member.first_name} {member.last_name} —{" "}
-                                <em>{member.pivot?.role || "Membre"}</em>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>Aucun membre affecté.</p>
-                )}
-            </div>
         </div>
     );
 };
