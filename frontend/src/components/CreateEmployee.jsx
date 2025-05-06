@@ -142,7 +142,7 @@ const CreateEmployee = () => {
                 )}
 
 
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded">Créer</button>
+                <button type="submit" className="bg-blue-500 text-black p-2 rounded">Créer</button>
             </form>
         </div>
     );

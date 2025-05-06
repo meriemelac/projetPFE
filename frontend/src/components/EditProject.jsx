@@ -218,7 +218,7 @@ const EditProject = () => {
                     )}
                 </div>
 
-                <button type="submit" className="bg-yellow-500 text-white px-4 py-2 rounded">
+                <button type="submit" className="bg-yellow-500 text-black px-4 py-2 rounded">
                     Enregistrer les modifications
                 </button>
                 <button

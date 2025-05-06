@@ -53,7 +53,7 @@ const Departments = () => {
             {user?.role_id === "1" && (
             <button
                 onClick={() => navigate("/departments/create")}
-                className="mb-4 bg-blue-600 text-white px-4 py-2 rounded"
+                className="mb-4 bg-blue-600 text-black px-4 py-2 rounded"
             >
                 + Ajouter un département
             </button>)}

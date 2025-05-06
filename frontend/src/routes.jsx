@@ -21,8 +21,9 @@ import Teams from "./components/Teams"
 import TeamDetails from "./components/TeamDetails";
 import EditTeam  from "./components/EditTeam";
 import CreateTeam  from "./components/CreateTeam";
-import TasksKanban from "./components/TasksKanbanBoard";
 import TasksByProjects from "./components/TaskByProjects";
+import TasksKanban from "./components/TasksKanbanBoard";
+import AllTasksKanbanBoard from "./components/AllTasksKanbanBoard";
 
 import Test from "./components/test";
 
@@ -65,6 +66,7 @@ export const routes = [
             { path: "/teams/edit/:id", element: <EditTeam   />},
             { path: '/tasks', element: <TasksByProjects /> },
             { path: "/projects/:projectId/tasks", element: <TasksKanban />},
+            { path: "/projects/:projectId/tasks/all", element: <AllTasksKanbanBoard />},
             { path: "/employees", element: <EmployeesList />},
             { path: "/employees/create", element: <CreateEmployee  />},
             { path: "/employees/:id/edit", element: <EditEmployee   />},

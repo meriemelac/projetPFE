@@ -89,13 +89,13 @@ const CreateTeam = () => {
         </div>
 
         <div className="flex gap-2">
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button type="submit" className="bg-blue-600 text-black px-4 py-2 rounded">
             Ajouter
           </button>
           <button
             type="button"
             onClick={() => navigate("/teams")}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
+            className="bg-gray-500 text-black px-4 py-2 rounded"
           >
             Retour
           </button>

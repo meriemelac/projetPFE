@@ -86,17 +86,18 @@ function TasksKanbanBoard() {
         }
 
         // 🔁 Mise à jour backend
-        await axiosInstance.put(`/tasks/${movedTask.id}/status`, {
+        await axiosInstance.put(`/tasks/${movedTask.id}/my-status`, {
             status: destination.droppableId,
             position: destination.index,
         });
+        
     };
 
 
 
     return (
         <>
-            <button onClick={() => setShowAddModal(true)} className="mb-4 bg-blue-600 text-white px-4 py-2 rounded">
+            <button onClick={() => setShowAddModal(true)} className="mb-4 bg-blue-600 text-black px-4 py-2 rounded">
                 + Ajouter une tâche
             </button>
             <AddTaskModal

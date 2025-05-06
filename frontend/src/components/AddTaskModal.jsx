@@ -83,7 +83,7 @@ function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
                         className="w-full border px-3 py-2 rounded"
                     />
 
-                    <select
+                    {/* <select
                         name="status"
                         value={formData.status}
                         onChange={handleChange}
@@ -93,7 +93,7 @@ function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
                         <option value="in_progress">En cours</option>
                         <option value="in_test">En test</option>
                         <option value="done">Terminée</option>
-                    </select>
+                    </select> */}
 
                     <select
                         name="priority"
@@ -147,7 +147,7 @@ function AddTaskModal({ isOpen, onClose, onTaskCreated }) {
                         <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
                             Annuler
                         </button>
-                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+                        <button type="submit" className="px-4 py-2 bg-blue-600 text-black rounded">
                             Ajouter
                         </button>
                     </div>

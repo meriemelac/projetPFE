@@ -26,8 +26,8 @@ function Navbar() {
 
     return (
         <nav>
-            <ul className='menu'>
-                <li className='logo text-white'><Link to="#">Taskwave</Link></li>
+            <ul className='menu m-0'>
+                <li className='logo text-white'><Link to="/">Taskwave</Link></li>
                 <li className='item text-white'><Link to="/notifications">Mes notifications</Link></li>
                 <li className='item text-white'><Link to="/profile">Mon profil</Link></li>
                 <li className='item text-white'>
@@ -35,7 +35,7 @@ function Navbar() {
                         Se déconnecter
                     </Link>
                 </li>
-                <li className='item button text-white'><a href="#">incase</a></li>
+                <li className='item button text-white'><a href="#">Messages</a></li>
                 <li className='item button secondary text-white'><a href="#">incase2</a></li>
                 <li className='toggle text-white'><span className='bars'></span></li>
             </ul>

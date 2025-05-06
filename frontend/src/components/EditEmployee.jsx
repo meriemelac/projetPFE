@@ -132,11 +132,11 @@ const EditEmployee = () => {
                     <option value="inactive">Inactif</option>
                 </select>
 
-                <button type="submit" className="bg-green-600 text-white p-2 rounded">Mettre à jour</button>
+                <button type="submit" className="bg-green-600 text-black p-2 rounded">Mettre à jour</button>
                 <button
                     type="button"
                     onClick={() => navigate(-1)} // revient à la page précédente
-                    className="bg-gray-400 text-white p-2 rounded"
+                    className="bg-gray-400 text-black p-2 rounded"
                 >
                     Annuler
                 </button>

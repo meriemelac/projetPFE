@@ -124,7 +124,7 @@ const EmployeesList = () => {
             {(userRole === "1" || userRole === "2") && (
                 <button
                     onClick={() => navigate(`/employees/create`)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                    className="bg-blue-500 text-black px-4 py-2 rounded mb-4"
                 >
                     + Ajouter un nouvel employé
                 </button>
