@@ -91,9 +91,11 @@ Route::middleware('auth:sanctum')->group(function () {
 // Tâches (API REST + Drag & Drop + Assignation)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{projectId}/tasks', [TaskController::class, 'index']);
+    Route::get('/projects/{id}/tasks/all', [TaskController::class, 'allTasksByProject']);
     Route::get('/tasks/{id}', [TaskController::class, 'show']);
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::put('/tasks/{task}', [TaskController::class, 'update']);
+    Route::put('/tasks/{id}/my-status', [TaskController::class, 'updateMyTaskStatus']);
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
     Route::put('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
     Route::post('/tasks/{task}/assign', [TaskController::class, 'assignEmployees']);
