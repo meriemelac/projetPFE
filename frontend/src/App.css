@@ -190,14 +190,45 @@ a:hover{
 
 /* Sidebar à gauche */
 .sidebar {
-    width: 250px;
-    height: calc(100vh - 60px);
+    /* width: 250px;
     background-color: #0077B6;
     color: white;
     padding: 20px;
     position: fixed;
     left: 0;
-    top: 60px; /* Pour être sous la navbar */
+    top: 60px;  */
+    z-index: 50px;
+    position: fixed;
+    height: 100%;
+    top: 40px;
+    left: 0;
+    background: #0077B6;
+    color: white;
+    width: 200px;
+    transition: width 0.3s;
+    /* overflow: hidden; */
+    padding-top: 20px;
+}
+
+.sidebar.closed {
+    width: 80px;
+}
+
+.sidebar .toggle-btn {
+    position: absolute;
+    top: 40px;
+    right: -15px; /* chevauche l'extérieur du sidebar */
+    background: #34495e;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    transition: right 0.3s;
 }
 
 .sidebar ul {
@@ -207,17 +238,37 @@ a:hover{
 
 .sidebar ul li {
     margin: 15px 0;
+    display: flex;
+    align-items: center;
 }
 
 .sidebar ul li a {
     color: white;
+    display: flex;
+    align-items: center;
     text-decoration: none;
 }
 
+.sidebar ul li a span {
+    /* margin-left: 10px; */
+}
+
+.sidebar.closed ul li a span {
+    display: none;
+}
+
+.sidebar.closed .toggle-btn {
+    right: -15px; /* même position, reste collé au bord même fermé */
+}
+
+.project-title{
+    margin-left: 10px;
+}
+
+
 /* Contenu principal */
 .main-content {
-    margin-left: 250px;
-    padding-top: 64px;
+    margin-left: 100px;
     flex: 1;
     width: 100%;
 }
