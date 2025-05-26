@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
+import EditMyProfile from "./components/EditMyProfile";
 import EmployeesList from "./components/EmployeesList";
 import CreateEmployee  from "./components/CreateEmployee";
 import EditEmployee   from "./components/EditEmployee";
@@ -52,6 +53,7 @@ export const routes = [
             { path: '/', element: <Home /> },
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <MyProfile /> },
+            { path: '/edit-my-profile', element: <EditMyProfile /> },
             { path: '/notifications', element: <Notifications /> },
             { path: '/departments', element: <Departments /> },
             { path: '/departments/create', element: <CreateDepartment /> },

@@ -31,27 +31,27 @@ const CreateEmployee = () => {
             try {
                 const depRes = await axiosInstance.get("/departments");
                 const roleRes = await axiosInstance.get("/roles");
-    
+
                 const allRoles = roleRes.data; // tableau de rôles
-    
+
                 // 👇 filtrage en fonction du rôle connecté
                 const filteredRoles = allRoles.filter(role => {
                     if (userRole === "1") return true; // admin → tous
                     if (userRole === "2") return [3, 4].includes(role.id); // chef de département → Team Leader + Employee
                     return false; // autres → aucun
                 });
-    
+
                 setDepartments(depRes.data.departments);
                 setRoles(filteredRoles);
-    
+
             } catch (error) {
                 console.error("Erreur chargement départements/roles :", error);
             }
         };
-    
+
         fetchData();
     }, [userRole]); // ⬅️ important : ajouter `userRole` comme dépendance
-    
+
     useEffect(() => {
         if (departments.length === 1) {
             setFormData(prev => ({
@@ -60,7 +60,7 @@ const CreateEmployee = () => {
             }));
         }
     }, [departments]);
-    
+
 
     // Charger les équipes selon le département
     useEffect(() => {
@@ -80,27 +80,59 @@ const CreateEmployee = () => {
 
     // Gérer les changements de champs
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, files, type } = e.target;
+        if (type === "file") {
+            setFormData((prev) => ({ ...prev, [name]: files[0] }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
+
 
     // Soumettre le formulaire
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axiosInstance.post("/employees", formData);
+            const data = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                if (value !== null && value !== "") {
+                    data.append(key, value);
+                }
+            });
+
+            console.log("FormData envoyé :");
+for (let pair of data.entries()) {
+    console.log(`${pair[0]}: ${pair[1]}`);
+}
+
+
+            await axiosInstance.post("/employees", data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
             alert("Employé créé avec succès !");
-            navigate("/employees"); // ou une autre route
+            navigate("/employees");
         } catch (err) {
-            console.error("Erreur création employé :", err);
+            console.error("Erreur création employé :", err.response?.data || err.message);
             alert("Erreur lors de la création.");
         }
     };
+
 
     return (
         <div className="p-6 max-w-2xl mx-auto bg-white rounded-xl shadow-md">
             <h2 className="text-xl font-bold mb-4">Créer un nouvel employé</h2>
             <form onSubmit={handleSubmit} className="grid gap-4">
+                <input
+                    type="file"
+                    name="profile_picture"
+                    accept="image/*"
+                    onChange={handleChange}
+                    className="border p-2"
+                />
+
                 <input name="first_name" placeholder="Prénom" onChange={handleChange} className="border p-2" required />
                 <input name="last_name" placeholder="Nom" onChange={handleChange} className="border p-2" required />
                 <input name="email" placeholder="Email" type="email" onChange={handleChange} className="border p-2" required />

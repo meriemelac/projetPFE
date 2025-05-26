@@ -32,6 +32,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
 //Employees
 Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');

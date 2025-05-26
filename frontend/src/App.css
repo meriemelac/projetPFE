@@ -2,12 +2,6 @@
 @import "tailwindcss";
 
 
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     font-family: 'Poppins', sans-serif;
 }
@@ -179,13 +173,15 @@ a:hover{
     display: flex;
     flex-direction: column;
     height: 100vh;
+    background-color: aliceblue;
 }
 
 /* Conteneur du sidebar + contenu */
 .content-container {
     display: flex;
+    background-color: aliceblue;
     flex: 1;
-    margin-top: 60px; /* Pour ne pas que le contenu soit caché par la navbar */
+    margin-top: 50px; /* Pour ne pas que le contenu soit caché par la navbar */
 }
 
 /* Sidebar à gauche */
@@ -268,7 +264,7 @@ a:hover{
 
 /* Contenu principal */
 .main-content {
-    margin-left: 100px;
+    margin-left: 80px;
     flex: 1;
     width: 100%;
 }
