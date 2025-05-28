@@ -56,69 +56,69 @@ class EmployeeController extends Controller
 
 
     public function store(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // 1. Vérification de droit : département
-    if ($user->role_id == 2 && $request->department_id != $user->department_id) {
-        return response()->json(['message' => 'Non autorisé à créer un employé dans un autre département.'], 403);
-    }
-
-    // 2. Vérification de l’équipe sélectionnée
-    if ($request->filled('team_id')) {
-        $team = \App\Team::find($request->team_id);
-
-        if (!$team) {
-            return response()->json(['message' => 'Équipe introuvable.'], 404);
+        // 1. Vérification de droit : département
+        if ($user->role_id == 2 && $request->department_id != $user->department_id) {
+            return response()->json(['message' => 'Non autorisé à créer un employé dans un autre département.'], 403);
         }
 
-        if ($user->role_id == 2 && $team->department_id != $user->department_id) {
-            return response()->json(['message' => 'Cette équipe ne vous appartient pas.'], 403);
+        // 2. Vérification de l’équipe sélectionnée
+        if ($request->filled('team_id')) {
+            $team = \App\Team::find($request->team_id);
+
+            if (!$team) {
+                return response()->json(['message' => 'Équipe introuvable.'], 404);
+            }
+
+            if ($user->role_id == 2 && $team->department_id != $user->department_id) {
+                return response()->json(['message' => 'Cette équipe ne vous appartient pas.'], 403);
+            }
+
+            if ($team->department_id != $request->department_id) {
+                return response()->json(['message' => 'L\'équipe sélectionnée ne correspond pas au département.'], 400);
+            }
         }
 
-        if ($team->department_id != $request->department_id) {
-            return response()->json(['message' => 'L\'équipe sélectionnée ne correspond pas au département.'], 400);
+        // 3. Validation
+        $validated = $request->validate([
+            'first_name'     => 'required|string|max:255',
+            'last_name'      => 'required|string|max:255',
+            'email'          => 'required|email|unique:employees,email',
+            'password'       => 'required|string|min:6',
+            'phone'          => 'nullable|string|max:20',
+            'position'       => 'required|string|max:255',
+            'role_id'        => 'required|exists:roles,id',
+            'department_id'  => 'required|exists:departments,id',
+            'team_id'        => 'nullable|exists:teams,id',
+            'profile_picture' => 'nullable|image|max:2048', // Valide une image si présente
+        ]);
+
+        // 4. Gestion du fichier image (si présent)
+        $profilePicturePath = null;
+        if ($request->hasFile('profile_picture')) {
+            $profilePicturePath = $request->file('profile_picture')->store('profile_photos', 's3');
         }
+
+        // 5. Création de l'employé
+        $employee = \App\Employee::create([
+            'first_name'     => $validated['first_name'],
+            'last_name'      => $validated['last_name'],
+            'email'          => $validated['email'],
+            'password'       => Hash::make($validated['password']),
+            'phone'          => $validated['phone'] ?? null,
+            'position'       => $validated['position'],
+            'role_id'        => $validated['role_id'],
+            'department_id'  => $validated['department_id'],
+            'team_id'        => $validated['team_id'] ?? null,
+            'profile_picture' => $profilePicturePath,
+            'status'         => 'active',
+            'hire_date'      => now(),
+        ]);
+
+        return response()->json($employee, 201);
     }
-
-    // 3. Validation
-    $validated = $request->validate([
-        'first_name'     => 'required|string|max:255',
-        'last_name'      => 'required|string|max:255',
-        'email'          => 'required|email|unique:employees,email',
-        'password'       => 'required|string|min:6',
-        'phone'          => 'nullable|string|max:20',
-        'position'       => 'required|string|max:255',
-        'role_id'        => 'required|exists:roles,id',
-        'department_id'  => 'required|exists:departments,id',
-        'team_id'        => 'nullable|exists:teams,id',
-        'profile_picture' => 'nullable|image|max:2048', // Valide une image si présente
-    ]);
-
-    // 4. Gestion du fichier image (si présent)
-    $profilePicturePath = null;
-    if ($request->hasFile('profile_picture')) {
-        $profilePicturePath = $request->file('profile_picture')->store('profile_photos', 'public');
-    }
-
-    // 5. Création de l'employé
-    $employee = \App\Employee::create([
-        'first_name'     => $validated['first_name'],
-        'last_name'      => $validated['last_name'],
-        'email'          => $validated['email'],
-        'password'       => Hash::make($validated['password']),
-        'phone'          => $validated['phone'] ?? null,
-        'position'       => $validated['position'],
-        'role_id'        => $validated['role_id'],
-        'department_id'  => $validated['department_id'],
-        'team_id'        => $validated['team_id'] ?? null,
-        'profile_picture'=> $profilePicturePath,
-        'status'         => 'active',
-        'hire_date'      => now(),
-    ]);
-
-    return response()->json($employee, 201);
-}
 
     public function show($id)
     {
