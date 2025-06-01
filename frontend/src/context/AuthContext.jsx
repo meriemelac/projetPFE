@@ -31,7 +31,9 @@ export const AuthProvider = ({ children }) => {
     const login = (userData) => {
         setUser(userData);
         setIsAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(userData));
     };
+
 
     // 🚪 Déconnexion (et suppression session)
     const logout = async () => {

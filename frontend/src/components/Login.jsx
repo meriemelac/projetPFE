@@ -19,15 +19,29 @@ const Login = () => {
         try {
             const response = await axiosInstance.post("/login", { email, password });
 
-            // Sauvegarde du token et mise à jour de l'état global
-            login(response.data.token, response.data.user.first_name, response.data.user.last_name, response.data.user.role_id);
+            const token = response.data.token;
+            const user = response.data.user;
 
-            // Redirection vers la page d'accueil après connexion
+            // 🟢 Stockage dans localStorage
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify({
+                id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                role_id: user.role_id
+            }));
+
+            // 🔁 Mise à jour du contexte global
+            login(user); // tu peux aussi faire login(user, token) si tu veux gérer le token aussi
+
+            // Redirection
             navigate("/");
         } catch (err) {
             setError(err.response?.data?.message || "Login failed");
         }
     };
+
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
