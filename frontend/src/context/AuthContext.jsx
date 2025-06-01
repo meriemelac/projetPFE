@@ -1,38 +1,54 @@
 import { createContext, useState, useEffect } from "react";
+import axiosInstance from "../api/axiosSanctum"; // ← axios avec withCredentials
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
-    const [user, setUser] = useState(
-        localStorage.getItem("user")
-            ? JSON.parse(localStorage.getItem("user"))
-            : null
-    );
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true); // pour attendre la vérif initiale
 
-    // Fonction pour se connecter
-    const login = (token, first_name, last_name, role_id) => {
-        localStorage.setItem("token", token);
-    
-        const userData = {
-            first_name,
-            last_name,
-            role_id
+    // 🔄 Vérification de session Sanctum au démarrage
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                await axiosInstance.get("/sanctum/csrf-cookie");
+                const res = await axiosInstance.get("/api/me");
+                setUser(res.data);
+                setIsAuthenticated(true);
+            } catch (error) {
+                setUser(null);
+                setIsAuthenticated(false);
+            } finally {
+                setLoading(false);
+            }
         };
-    
-        localStorage.setItem("user", JSON.stringify(userData));
+
+        checkAuth();
+    }, []);
+
+    // ✅ Login avec session Sanctum
+    const login = (userData) => {
         setUser(userData);
         setIsAuthenticated(true);
     };
-    
 
-    // Fonction pour se déconnecter
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
-        setIsAuthenticated(false);
+    // 🚪 Déconnexion (et suppression session)
+    const logout = async () => {
+        try {
+            await axiosInstance.post("/api/logout");
+        } catch (err) {
+            console.error("Erreur de déconnexion :", err);
+        } finally {
+            setUser(null);
+            setIsAuthenticated(false);
+        }
     };
+
+    // 🕐 Attente de vérification initiale
+    if (loading) {
+        return <div>Chargement...</div>;
+    }
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
