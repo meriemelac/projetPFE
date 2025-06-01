@@ -12,6 +12,9 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ChatController;
+
+use App\Http\Controllers\API\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,15 +27,18 @@ use App\Http\Controllers\RoleController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
 
 //Authentification
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
+
+//messages
+Route::post('/chat/send', [ChatController::class, 'sendMessage'])->middleware('auth:sanctum');
+
 
 //Employees
 Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');

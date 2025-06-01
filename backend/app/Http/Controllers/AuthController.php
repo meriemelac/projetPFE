@@ -17,21 +17,18 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // Validation des données envoyées
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Recherche de l'utilisateur
         $employee = Employee::where('email', $request->email)->first();
 
-        // Vérifier si l'utilisateur existe et si le mot de passe est correct
         if (!$employee || !Hash::check($request->password, $employee->password)) {
             return response()->json(['message' => 'Identifiants invalides'], 401);
         }
 
-        // Générer un token Sanctum
+        // ✅ Ne pas utiliser la session ici
         $token = $employee->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -44,8 +41,10 @@ class AuthController extends Controller
                 'email' => $employee->email,
                 'role_id' => $employee->role_id,
             ],
-        ], 200);
+        ]);
     }
+
+
 
     /**
      * Déconnexion de l'utilisateur (Suppression du token).
@@ -78,8 +77,9 @@ class AuthController extends Controller
             'status' => $employee->status,
             'hire_date' => $employee->hire_date,
             'profile_photo_url' => $employee->profile_picture
-                ? asset('storage/' . $employee->profile_picture)
+                ? env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/' . $employee->profile_picture
                 : null,
+
             'role' => $employee->role->description ?? null,
             'department' => $employee->department->name ?? null,
             'team' => $employee->team->name ?? null,
@@ -122,8 +122,9 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Profil mis à jour avec succès.',
             'profile_photo_url' => $employee->profile_picture
-                ? asset('storage/' . $employee->profile_picture)
+                ? env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/' . $employee->profile_picture
                 : null,
+
         ]);
     }
 }
