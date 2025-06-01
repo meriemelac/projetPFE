@@ -190,16 +190,6 @@ const EditMyProfile = () => {
                             </div>
 
                             <div className="pt-2 flex justify-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => navigate("/profile")}
-                                    className="text-black !text-sm px-4 py-2 rounded"
-                                    style={{ backgroundColor: "#dee2e6" }}
-                                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#ced1d4")}
-                                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#dee2e6")}
-                                >
-                                    Annuler
-                                </button>
 
                                 <button
                                     type="submit"
@@ -209,6 +199,16 @@ const EditMyProfile = () => {
                                     onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}
                                 >
                                     Enregistrer les modifications
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => navigate("/profile")}
+                                    className="text-black !text-sm px-4 py-2 rounded"
+                                    style={{ backgroundColor: "#dee2e6" }}
+                                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#ced1d4")}
+                                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#dee2e6")}
+                                >
+                                    Annuler
                                 </button>
                             </div>
                         </form>
