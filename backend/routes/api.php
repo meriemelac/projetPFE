@@ -37,8 +37,8 @@ Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
 //messages
-Route::post('/chat/send', [ChatController::class, 'sendMessage'])->middleware('auth:sanctum');
-
+Route::get('/messages/{receiverId}', [ChatController::class, 'getMessages'])->middleware('auth:sanctum');
+Route::post('/messages', [ChatController::class, 'sendMessage'])->middleware('auth:sanctum');
 
 //Employees
 Route::get('/employees', [EmployeeController::class, 'index'])->middleware('auth:sanctum');
