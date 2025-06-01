@@ -43,47 +43,73 @@ const Projects = () => {
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
-        <div className="p-4">
-            {canManage && (
-                <button
-                    onClick={() => navigate("/projects/create")}
-                    className="mb-4 bg-green-600  px-4 py-2 rounded"
-                >
-                    + Ajouter un projet
-                </button>
-            )}
+        <div className="px-4 py-6  mx-auto">
 
-            <h2 className="text-xl font-bold mb-2">Liste des projets</h2>
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4 !md:mb-6">
+                <div className="flex flex-col">
+                    <button
+                        onClick={() => window.history.go(-1)}
+                        className="bg-gray-200 hover:bg-gray-300 rounded !font-bold !text-5xl w-fit"
+                    >
+                        ←
+                    </button>
+                    <h2 className="text-2xl font-bold text-gray-800">Liste des projets</h2>
+                </div>
+
+                {canManage && (
+                    <div className="self-end md:self-auto">
+                        <button
+                            onClick={() => navigate("/projects/create")}
+                            className="text-white  px-4 py-2 rounded"
+                            style={{ backgroundColor: "#0077B6" }}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = "#0098e9")}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}
+                        >
+                            + Ajouter un projet
+                        </button>
+                    </div>
+                )}
+            </div>
+
+
 
             {projects.length > 0 ? (
-                <ul className="space-y-4">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 !p-0">
                     {projects.map((proj) => (
-                        <li key={proj.id} className="border rounded p-4 shadow">
-                            <p><strong>Titre :</strong> {proj.title}</p>
-                            <p><strong>Description :</strong> {proj.description}</p>
-                            <div className="space-x-2 mt-2">
+                        <li key={proj.id} className="bg-white p-4 rounded-lg shadow border border-gray-100 !space-y-2">
+                            <p className="p-0 m-0"><strong>Titre :</strong> {proj.title}</p>
+                            <p className="p-0 m-0"><strong>Description :</strong> {proj.description}..
                                 <button
                                     onClick={() => navigate(`/projects/${proj.id}`)}
-                                    className="bg-blue-500 px-3 py-1 rounded "
+                                    style={{ color: "#0077B6" }}
+                                    className="!text-blue rounded px-1 hover:underline"
                                 >
-                                    Voir détails
+                             Voir détails
                                 </button>
+                                </p>
+                            <div className="mt-3">
 
                                 {canManage && (
-                                    <>
+                                    <div className="flex gap-3 justify-end">
                                         <button
                                             onClick={() => navigate(`/projects/edit/${proj.id}`)}
-                                            className="bg-yellow-500 px-3 py-1 rounded "
+                                            className="text-white text-sm rounded !px-2 py-2"
+                                        style={{ backgroundColor: "#1fb06d" }}
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = "#23c47a")}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = "#1fb06d")}
                                         >
                                             Modifier
                                         </button>
                                         <button
                                             onClick={() => handleDelete(proj.id)}
-                                            className="bg-red-600 px-3 py-1 rounded"
+                                            className="text-white text-sm rounded !px-2 py-2"
+                                        style={{ backgroundColor: "#dc3545" }}
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = "#ec5c6a")}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
                                         >
                                             Supprimer
                                         </button>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </li>

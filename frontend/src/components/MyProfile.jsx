@@ -26,7 +26,7 @@ const MyProfile = () => {
         fetchProfile();
     }, []);
 
-    if (loading) return <p>Chargement...</p>;
+    if (loading) return <p className="text-center text-gray-600">Chargement du profil...</p>;
     if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
@@ -103,49 +103,6 @@ const MyProfile = () => {
                 )}
             </div>
         </div>
-
-
-
-        // <div className="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
-        //     <h2 className="text-xl font-bold mb-4">Mon Profil</h2>
-        //     {user ? (
-        //         <div>
-        //             <img
-        //                 src={user.profile_photo_url || imageprofile}
-        //                 alt="Photo de profil"
-        //                 style={{
-        //                     width: "120px",
-        //                     height: "120px",
-        //                     objectFit: "cover",
-        //                     borderRadius: "50%",
-        //                     border: "2px solid #ccc",
-        //                 }}
-        //                 className="mb-4"
-        //             />
-
-        //             <ul className="mb-6 space-y-1">
-        //                 <li><strong>Nom :</strong> {user.first_name} {user.last_name}</li>
-        //                 <li><strong>Email :</strong> {user.email}</li>
-        //                 <li><strong>Téléphone :</strong> {user.phone}</li>
-        //                 <li><strong>Poste :</strong> {user.position}</li>
-        //                 <li><strong>Statut :</strong> {user.status}</li>
-        //                 <li><strong>Date d’embauche :</strong> {user.hire_date}</li>
-        //                 <li><strong>Rôle :</strong> {user.role}</li>
-        //                 <li><strong>Département :</strong> {user.department}</li>
-        //                 <li><strong>Équipe :</strong> {user.team}</li>
-        //             </ul>
-
-        //             <button
-        //                 onClick={() => navigate("/edit-my-profile")}
-        //                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        //             >
-        //                 Modifier mon profil
-        //             </button>
-        //         </div>
-        //     ) : (
-        //         <p>Aucun utilisateur trouvé</p>
-        //     )}
-        // </div>
     );
 };
 

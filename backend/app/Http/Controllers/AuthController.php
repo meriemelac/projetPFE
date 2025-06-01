@@ -90,13 +90,12 @@ class AuthController extends Controller
     {
         $employee = $request->user();
 
-        // Validation des champs modifiables
         $validator = Validator::make($request->all(), [
             'first_name' => 'sometimes|required|string|max:255',
             'last_name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:employees,email,' . $employee->id,
             'phone' => 'nullable|string|max:20',
-            'profile_picture' => 'nullable|image|max:2048', // max 2MB
+            'profile_picture' => 'nullable|image|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -105,18 +104,17 @@ class AuthController extends Controller
 
         $data = $validator->validated();
 
-        // Si une nouvelle image est envoyée
         if ($request->hasFile('profile_picture')) {
-            // Supprimer l’ancienne si elle existe
-            if ($employee->profile_picture && Storage::disk('public')->exists($employee->profile_picture)) {
-                Storage::disk('public')->delete($employee->profile_picture);
+            // Supprimer l'ancienne image depuis S3
+            if ($employee->profile_picture && Storage::disk('s3')->exists($employee->profile_picture)) {
+                Storage::disk('s3')->delete($employee->profile_picture);
             }
 
-            $path = $request->file('profile_picture')->store('profile_photos', 'public');
+            // Sauvegarder la nouvelle image sur S3
+            $path = $request->file('profile_picture')->store('profile_photos', 's3');
             $data['profile_picture'] = $path;
         }
 
-        // Mise à jour des champs
         $employee->update($data);
 
         return response()->json([
@@ -124,7 +122,6 @@ class AuthController extends Controller
             'profile_photo_url' => $employee->profile_picture
                 ? env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET') . '/' . $employee->profile_picture
                 : null,
-
         ]);
     }
 }

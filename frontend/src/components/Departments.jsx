@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../api/api"; // Import de l'instance Axios
+import React, { useContext, useEffect, useState } from "react";
+import axiosInstance from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+
 
 const Departments = () => {
     const [departments, setdepartments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [user, setUser] = useState(null);
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+
+
+    const roleId = user?.role_id;
+    const canManage = ["1", "2", "3"].includes(roleId);
+
 
     useEffect(() => {
         axiosInstance.get("/me").then(res => setUser(res.data));
     }, []);
-
 
     const handleDelete = async (id) => {
         if (!window.confirm("Voulez-vous vraiment supprimer ce département ?")) return;
@@ -31,60 +37,89 @@ const Departments = () => {
         const fetchdepartments = async () => {
             try {
                 const response = await axiosInstance.get("/departments");
-                setdepartments(response.data.departments); // on extrait le tableau
-                console.log("departments reçues:", response.data.departments);
+                setdepartments(response.data.departments);
+                console.log("departments reçus:", response.data.departments);
             } catch (error) {
-                setError(error.response?.data?.message || "Erreur lors de la récupération des departments");
+                setError(error.response?.data?.message || "Erreur lors de la récupération des départements");
                 console.error("Erreur:", error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchdepartments();
     }, []);
 
-    if (loading) return <p>Chargement...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    if (loading) return <p className="text-center text-gray-500">Chargement...</p>;
+    if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
-        <div>
-            <h2>Departments</h2>
-            {user?.role_id === "1" && (
+        <div className="px-4 py-6  mx-auto">
+<div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4 !md:mb-6">
+    <div className="flex flex-col">
+        <button
+            onClick={() => window.history.go(-1)}
+            className="bg-gray-200 hover:bg-gray-300 rounded !font-bold !text-5xl w-fit"
+        >
+            ← 
+        </button>
+        <h2 className="text-2xl font-bold text-gray-800">Départements</h2>
+    </div>
+
+    {canManage && (
+        <div className="self-end md:self-auto">
             <button
                 onClick={() => navigate("/departments/create")}
-                className="mb-4 bg-blue-600 text-black px-4 py-2 rounded"
+                className="text-white !text-sm px-4 py-2 rounded"
+                style={{ backgroundColor: "#0077B6" }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#0098e9")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}
             >
                 + Ajouter un département
-            </button>)}
+            </button>
+        </div>
+    )}
+</div>
+
 
             {departments.length > 0 ? (
-                <ul>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     {departments.map((dep) => (
-                        <li key={dep.id}>
-                            <p><strong>Département :</strong> {dep.name}</p>
-                            <p><strong>Description d'activité :</strong> {dep.description}</p>
+                        <div
+                            key={dep.id}
+                            className="bg-white p-4 rounded-lg shadow border border-gray-100"
+                        >
+                            <h3 className="text-lg font-semibold text-gray-700">{dep.name}</h3>
+                            <p className="text-gray-600 text-sm mt-1">
+                                <span className="font-medium">Description :</span> {dep.description}
+                            </p>
 
-                            {/* Supprimer (si admin uniquement) */}
-                            {user?.role_id === "1" && (
-                                <div>
-                                <button
-                                onClick={() => navigate(`/departments/edit/${dep.id}`)}
-                                className="text-blue-500 hover:underline ml-2"
-                              >
-                                Modifier
-                              </button>
-                                <button onClick={() => handleDelete(dep.id)}>Supprimer</button>
+                            {canManage && (
+                                <div className="mt-4 flex gap-3 justify-end">
+                                    <button
+                                        onClick={() => navigate(`/departments/edit/${dep.id}`)}
+                                        className="text-white text-sm rounded !px-2 py-2"
+                                        style={{ backgroundColor: "#1fb06d" }}
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = "#23c47a")}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = "#1fb06d")}
+                                    >
+                                        Modifier
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(dep.id)}
+                                        className="text-white text-sm rounded !px-2 py-2"
+                                        style={{ backgroundColor: "#dc3545" }}
+                                        onMouseEnter={(e) => (e.target.style.backgroundColor = "#ec5c6a")}
+                                        onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
+                                    >
+                                        Supprimer
+                                    </button>
                                 </div>
                             )}
-
-                            <hr />
-                        </li>
+                        </div>
                     ))}
-
-                </ul>
+                </div>
             ) : (
-                <p>Aucun département trouvé</p>
+                <p className="text-gray-500 text-center mt-6">Aucun département trouvé.</p>
             )}
         </div>
     );

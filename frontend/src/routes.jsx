@@ -61,7 +61,7 @@ export const routes = [
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <MyProfile /> },
             { path: '/edit-my-profile', element: <EditMyProfile /> },
-            { path: '/notifications', element: <Notifications /> },
+            { path: '/notifications', element: <Notifications /> }, //reste frontend
             { path: '/departments', element: <Departments /> },
             { path: '/departments/create', element: <CreateDepartment /> },
             { path: '/departments/edit/:id', element: <EditDepartment /> },
