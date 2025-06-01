@@ -95,7 +95,7 @@ function Sidebar() {
                                 >
                                     <FaProjectDiagram className="w-5 h-5" />
                                     {isOpen && (
-                                        <span className="ml-3 truncate" title={project.title}>
+                                        <span className="ml-3 truncate\" title={project.title}>
                                             {project.title}
                                         </span>
                                     )}
