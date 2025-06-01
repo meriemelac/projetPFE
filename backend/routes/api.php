@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
@@ -13,22 +14,10 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ChatController;
-
 use App\Http\Controllers\API\MessageController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-
-
+// Broadcasting route
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 //Authentification
 Route::post('/login', [AuthController::class, 'login']);
@@ -47,24 +36,19 @@ Route::get('/employees/{id}', [EmployeeController::class, 'show'])->middleware([
 Route::put('/employees/{id}', [EmployeeController::class, 'update'])->middleware(['auth:sanctum', 'role:1,2', 'check.assignable.role']);
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->middleware(['auth:sanctum', 'role:1,2']);
 
-
 //Notifications
 Route::get('/notifications', [NotificationController::class, 'index']);
 
-
 //Departements
-// Accessible à tous les employés
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/departments', [DepartmentController::class, 'index']);
 });
-// Accessible uniquement à l'admin
 Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
     Route::get('/departments/{id}', [DepartmentController::class, 'show']);
     Route::post('/departments', [DepartmentController::class, 'store']);
     Route::put('/departments/{id}', [DepartmentController::class, 'update']);
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy']);
 });
-
 
 //Projects
 Route::middleware('auth:sanctum')->group(function () {
@@ -73,29 +57,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/available-members', [ProjectController::class, 'availableMembers']);
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
     Route::get('/projects/{id}/members', [ProjectController::class, 'members']);
-    
-    // restreint aux rôles 1, 2, 3 — la logique est déjà dans le controller
     Route::post('/projects', [ProjectController::class, 'store']);
     Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
 });
 
-
-//Team// Toutes les routes nécessitent une authentification
+//Team
 Route::middleware('auth:sanctum')->group(function () {
-    
-    // Tous les utilisateurs peuvent voir la liste des équipes accessibles et leurs équipes
     Route::get('/teams', [TeamController::class, 'index']);
     Route::get('/teams/{id}', [TeamController::class, 'show']);
     Route::get('/departments/{id}/teams', [DepartmentController::class, 'getTeams']);
-    // Routes réservées à l'admin et au chef de département
     Route::post('/teams', [TeamController::class, 'store']);
     Route::put('/teams/{id}', [TeamController::class, 'update']);
     Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
 });
 
 //Task
-// Tâches (API REST + Drag & Drop + Assignation)
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects/{projectId}/tasks', [TaskController::class, 'index']);
     Route::get('/projects/{id}/tasks/all', [TaskController::class, 'allTasksByProject']);
@@ -106,10 +83,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
     Route::put('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
     Route::post('/tasks/{task}/assign', [TaskController::class, 'assignEmployees']);
-    // Route::post('/tasks/{task}/comments', [CommentController::class, 'store']);
     Route::get('/projects/{projectId}/my-tasks', [TaskController::class, 'myTasksByProject']);
 });
-
 
 //Comments
 Route::get('/tasks/{taskId}/comments', [CommentController::class, 'getCommentsForTask'])->middleware('auth:sanctum');
