@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axiosInstance from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Teams = () => {
   const [teams, setTeams] = useState([]);
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  const roleId = user?.role_id;
+  const canManage = ["1", "2"].includes(roleId);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTeams = async () => {
       try {
-        // Récupération utilisateur
-        const userRes = await axiosInstance.get("/me");
-        setUser(userRes.data);
-
-        // Récupération des équipes
-        const teamRes = await axiosInstance.get("/teams");
-        setTeams(teamRes.data.teams);
+        const res = await axiosInstance.get("/teams");
+        setTeams(res.data.teams);
       } catch (error) {
-        setError("Erreur lors du chargement des données.");
+        setError("Erreur lors du chargement des équipes.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchTeams();
   }, []);
 
   const handleDelete = async (id) => {
@@ -34,66 +33,95 @@ const Teams = () => {
 
     try {
       await axiosInstance.delete(`/teams/${id}`);
-      setTeams(teams.filter((team) => team.id !== id));
+      setTeams((prev) => prev.filter((team) => team.id !== id));
     } catch (error) {
       alert("Erreur lors de la suppression de l’équipe.");
     }
   };
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p className="text-center text-gray-600">Chargement ...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Liste des Équipes</h2>
-
-      {/* Ajouter équipe (admin ou chef de département) */}
-      {user && (user.role_id === "1" || user.role_id === "2") && (
+    <div className="px-4 py-6 mx-auto">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-2">
+    <div className="flex flex-col">
         <button
-          onClick={() => navigate("/teams/create")}
-          className="mb-4 bg-blue-600 text-black px-4 py-2 rounded"
+            onClick={() => window.history.go(-1)}
+            className="bg-gray-200 hover:bg-gray-300 rounded !font-bold !text-5xl w-fit"
         >
-          + Ajouter une équipe
+            ← 
         </button>
-      )}
+        <h2 className="text-2xl font-bold text-gray-800">Liste des Équipes</h2>
+    </div>
 
-      <ul>
-        {teams.map((team) => (
-          <li key={team.id} className="mb-4 border p-3 rounded">
-            <p className="font-semibold">{team.name}</p>
-            <p className="text-sm text-gray-600">
-              Département : {team.department?.name || "N/A"}
-            </p>
+    {canManage && (
+        <div className="self-end md:self-auto">
+            <button
+                onClick={() => navigate("/teams/create")}
+                className="text-white  px-4 py-2 rounded"
+                style={{ backgroundColor: "#0077B6" }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#0098e9")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}
+            >
+                + Ajouter une équipe
+            </button>
+        </div>
+    )}
+</div>
 
-            <div className="mt-2 flex gap-2">
+
+     {teams.length > 0 ? (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    {teams.map((team) => (
+      <div
+        key={team.id}
+        className="bg-white p-4 rounded-lg shadow border border-gray-100"
+      >
+        <h3 className="text-lg font-semibold">{team.name}</h3>
+        <p className="text-sm mt-1">
+          <span className="font-medium">Département :</span> {team.department?.name || "N/A"}... 
+          <button
+            onClick={() => navigate(`/teams/${team.id}`)}
+            style={{ color: "#0077B6" }}
+            className="!text-blue rounded px-1 hover:underline"
+          >
+             Voir les détails
+          </button>
+        </p>
+
+        <div className="mt-2 flex gap-3 justify-end flex-wrap">
+
+          {user && (user.role_id === "1" || (user.role_id === "2" && user.department_id === team.department_id)) && (
+            <>
               <button
-                onClick={() => navigate(`/teams/${team.id}`)}
-                className="text-blue-500 hover:underline"
+                onClick={() => navigate(`/teams/edit/${team.id}`)}
+                className="text-white text-sm rounded !px-2 py-2"
+                style={{ backgroundColor: "#1fb06d" }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#23c47a")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#1fb06d")}
               >
-                Voir les détails
+                Modifier
               </button>
+              <button
+                onClick={() => handleDelete(team.id)}
+                className="text-white text-sm rounded !px-2 py-2"
+                style={{ backgroundColor: "#dc3545" }}
+                onMouseEnter={(e) => (e.target.style.backgroundColor = "#ec5c6a")}
+                onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc3545")}
+              >
+                Supprimer
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+) : (
+  <p className="text-gray-500 text-center mt-6">Aucune équipe trouvée.</p>
+)}
 
-              {/* Modifier / Supprimer (admin ou chef du département) */}
-              {user && (user.role_id === "1" || (user.role_id === "2" && user.department_id === team.department_id)) && (
-                <>
-                  <button
-                    onClick={() => navigate(`/teams/edit/${team.id}`)}
-                    className="text-green-600 hover:underline"
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => handleDelete(team.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Supprimer
-                  </button>
-                </>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

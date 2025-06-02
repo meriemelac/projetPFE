@@ -68,9 +68,9 @@ export const routes = [
             { path: '/projects', element: <Projects /> },
             { path: '/projects/:id', element: <ProjectDetails /> },
             { path: '/projects/create', element: <CreateProject /> },
-            { path: '/projects/edit/:id', element: <EditProject /> },
+            { path: '/projects/edit/:id', element: <EditProject /> }, 
             { path: '/teams', element: <Teams /> },
-            { path: "/teams/:id", element: <TeamDetails /> },
+            { path: "/teams/:id", element: <TeamDetails /> }, // wsseeeeeelt hnaaaaaaaa
             { path: "/teams/create", element: <CreateTeam /> },
             { path: "/teams/edit/:id", element: <EditTeam /> },
             { path: '/tasks', element: <TasksByProjects /> },

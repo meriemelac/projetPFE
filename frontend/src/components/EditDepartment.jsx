@@ -49,7 +49,7 @@ const EditDepartment = () => {
     }
   };
 
-  if (loading) return <p>Chargement...</p>;
+ if (loading) return <p className="text-center text-gray-600">Chargement ...</p>;
 
   return (
     <div className="px-4 py-6 mx-auto">

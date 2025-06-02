@@ -2,6 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../api/api";
 
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Checkbox from '@mui/material/Checkbox';
+import Avatar from '@mui/material/Avatar';
+
+
 const EditProject = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -82,6 +91,24 @@ const EditProject = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const handleEmployeeToggle = (emp) => {
+        const id = emp.id.toString(); // toujours stocker en string comme dans `formData`
+        setFormData((prev) => {
+            const updatedIds = prev.employee_ids.includes(id)
+                ? prev.employee_ids.filter((eid) => eid !== id)
+                : [...prev.employee_ids, id];
+            return { ...prev, employee_ids: updatedIds };
+        });
+
+        setSelectedMembers((prev) => {
+            const exists = prev.find((m) => m.id === emp.id);
+            return exists
+                ? prev.filter((m) => m.id !== emp.id)
+                : [...prev, emp];
+        });
+    };
+
+
     const handleEmployeeSelect = (e) => {
         const selectedIds = Array.from(e.target.selectedOptions).map(option => option.value);
         setFormData(prev => ({ ...prev, employee_ids: selectedIds }));
@@ -109,128 +136,254 @@ const EditProject = () => {
         }
     };
 
-    if (loading) return <p>Chargement...</p>;
+    if (loading) return <p className="text-center text-gray-600">Chargement ...</p>;
 
     return (
-        <div className="max-w-lg mx-auto mt-10 bg-white p-6 rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">Modifier le projet</h2>
-
-            {error && <p className="text-red-600 mb-4">{error}</p>}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    placeholder="Titre du projet"
-                    className="w-full border px-3 py-2 rounded"
-                    required
-                />
-                <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Description"
-                    className="w-full border px-3 py-2 rounded"
-                />
-                <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                >
-                    <option value="planned">Planned</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-                <input
-                    type="date"
-                    name="start_date"
-                    value={formData.start_date}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                />
-                <input
-                    type="date"
-                    name="end_date"
-                    value={formData.end_date}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                />
-                <select
-                    name="manager_id"
-                    value={formData.manager_id}
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                    required
-                >
-                    <option value="">-- Sélectionner un manager --</option>
-                    {managers.map((manager) => (
-                        <option key={manager.id} value={manager.id}>
-                            {manager.first_name} {manager.last_name}
-                        </option>
-                    ))}
-                </select>
-                <input
-                    type="number"
-                    name="team_id"
-                    value={formData.team_id}
-                    placeholder="ID de l'équipe (optionnel)"
-                    onChange={handleChange}
-                    className="w-full border px-3 py-2 rounded"
-                />
-
-                <select
-                    multiple
-                    name="employee_ids"
-                    value={formData.employee_ids}
-                    onChange={handleEmployeeSelect}
-                    className="w-full border px-3 py-2 rounded"
-                >
-                    {allEmployees.map((emp) => (
-                        <option key={emp.id} value={emp.id}>
-                            {emp.first_name} {emp.last_name}
-                        </option>
-                    ))}
-                </select>
-
-                <div className="mt-4">
-                    <h4 className="font-semibold">Membres sélectionnés :</h4>
-                    {selectedMembers.length > 0 ? (
-                        <ul className="list-disc pl-5">
-                            {selectedMembers.map(member => (
-                                <li key={member.id} className="flex items-center justify-between">
-                                    <span>{member.first_name} {member.last_name}</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveMember(member.id)}
-                                        className="text-red-500 text-sm ml-2"
-                                    >
-                                        Supprimer
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="text-gray-500">Aucun membre sélectionné.</p>
-                    )}
-                </div>
-
-                <button type="submit" className="bg-yellow-500 text-black px-4 py-2 rounded">
-                    Enregistrer les modifications
-                </button>
+        <div className="px-4 py-6 mx-auto">
+            {/* En-tête */}
+            <div className="flex flex-col mb-4">
                 <button
-                    type="button"
-                    onClick={() => navigate("/projects")}
-                    className="ml-2 bg-gray-300 text-black px-4 py-2 rounded"
+                    onClick={() => window.history.go(-1)}
+                    className="bg-gray-200 hover:bg-gray-300 rounded !font-bold !text-5xl w-fit"
                 >
-                    Annuler
+                    ←
                 </button>
-            </form>
+                <h2 className="text-2xl font-bold text-gray-800">Modifier le projet</h2>
+            </div>
+
+            {/* Message d'erreur */}
+            {error && (
+                <p className="text-red-500 mb-4 bg-red-100 px-4 py-2 rounded">{error}</p>
+            )}
+
+            {/* Formulaire dans une carte */}
+            <div className="bg-white !p-6 rounded-xl shadow border border-gray-100">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="!space-y-4">
+                            <div>
+                                <label className="block !font-bold">
+                                    Titre du projet
+                                </label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-100 focus:outline-none"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block !font-bold">
+                                    Description
+                                </label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleChange}
+                                    rows={4}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block !font-bold">
+                                    Statut
+                                </label>
+                                <select
+                                    name="status"
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                >
+                                    <option value="planned">Planned</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block !font-bold">
+                                        Date de début
+                                    </label>
+                                    <input
+                                        type="date"
+                                        name="start_date"
+                                        value={formData.start_date}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block !font-bold">
+                                        Date de fin
+                                    </label>
+                                    <input
+                                        type="date"
+                                        name="end_date"
+                                        value={formData.end_date}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="!space-y-4">
+                            <div>
+                                <label className="block !font-bold">
+                                    Chef de projet
+                                </label>
+                                <select
+                                    name="manager_id"
+                                    value={formData.manager_id}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full !px-4 !py-2 border border-gray-300 rounded-md"
+                                >
+                                    <option className="!px-4 !py-2" value="">-- Sélectionner un manager --</option>
+                                    {managers.map((manager) => (
+                                        <option key={manager.id} value={manager.id}>
+                                            {manager.first_name} {manager.last_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="!hidden">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    ID de l'équipe (optionnel)
+                                </label>
+                                <input
+                                    type="number"
+                                    name="team_id"
+                                    value={formData.team_id}
+                                    placeholder="ID de l'équipe"
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            <div>
+
+                                <div>
+                                    <label className="block !font-bold mb-2">Membres du projet</label>
+                                    <List dense sx={{
+                                        width: '100%',
+                                        maxHeight: 200,
+                                        overflowY: 'auto',
+                                        bgcolor: 'background.paper',
+                                        borderRadius: 1,
+                                        border: '1px solid #e5e7eb',
+                                    }}>
+                                        {allEmployees.map((emp) => {
+                                            const checked = formData.employee_ids.includes(emp.id.toString());
+                                            return (
+                                                <ListItem
+                                                    key={emp.id}
+                                                    disablePadding
+                                                    secondaryAction={
+                                                        <Checkbox
+                                                            edge="end"
+                                                            onChange={() => handleEmployeeToggle(emp)}
+                                                            checked={checked}
+                                                        />
+                                                    }
+                                                >
+                                                    <ListItemButton onClick={() => handleEmployeeToggle(emp)}>
+                                                        <ListItemAvatar>
+                                                            <Avatar src={emp.profile_photo_url}>
+                                                                {emp.first_name[0]}
+                                                            </Avatar>
+                                                        </ListItemAvatar>
+                                                        <ListItemText primary={`${emp.first_name} ${emp.last_name}`} />
+                                                    </ListItemButton>
+                                                </ListItem>
+                                            );
+                                        })}
+                                    </List>
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <label className="block !font-bold mb-2">Membres sélectionnés :</label>
+
+                                {selectedMembers.length > 0 ? (
+                                    <List
+                                        dense
+                                        sx={{
+                                            width: '100%',
+                                            maxHeight: 200,
+                                            overflowY: 'auto',
+                                            bgcolor: 'background.paper',
+                                            borderRadius: 1,
+                                            border: '1px solid #e5e7eb',
+                                        }}
+                                    >
+                                        {selectedMembers.map((member) => (
+                                            <ListItem
+                                                key={member.id}
+                                                disablePadding
+                                                secondaryAction={
+                                                    <button
+                                                        onClick={() => handleRemoveMember(member.id)}
+                                                        className="!text-red-500 !font-bold !text-xl !px-2 hover:!text-red-700"
+                                                        aria-label="Retirer"
+                                                        title="Retirer ce membre"
+                                                    >
+                                                        −
+                                                    </button>
+                                                }
+                                            >
+                                                <ListItemButton>
+                                                    <ListItemAvatar>
+                                                        <Avatar src={member.profile_photo_url}>
+                                                            {member.first_name[0]}
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={`${member.first_name} ${member.last_name}`} />
+                                                </ListItemButton>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                ) : (
+                                    <p className="text-gray-500 text-sm">Aucun membre sélectionné.</p>
+                                )}
+                            </div>
+
+                    {/* Boutons */}
+                    <div className="flex justify-end gap-2 !mx-auto">
+                        <button type="submit"
+                            className="text-white !text-sm px-4 py-2 rounded"
+                            style={{ backgroundColor: "#0077B6" }}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = "#0098e9")}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}>
+                            Enregistrer
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate("/projects")}
+                            className="text-black !text-sm px-4 py-2 rounded"
+                            style={{ backgroundColor: "#dee2e6" }}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = "#ced1d4")}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dee2e6")}
+                        >
+                            Annuler
+                        </button>
+                    </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </div>
     );
+
 };
 
 export default EditProject;

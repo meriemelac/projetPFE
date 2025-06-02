@@ -12,11 +12,13 @@
   "dependencies": {
     "@chakra-ui/react": "^3.13.0",
     "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@headlessui/react": "^2.2.1",
     "@hello-pangea/dnd": "^18.0.1",
     "@mantine/core": "^6.0.21",
     "@mantine/dates": "^6.0.21",
     "@mantine/hooks": "^6.0.21",
+    "@mui/material": "^7.1.1",
     "@tabler/icons-react": "^3.31.0",
     "@tailwindcss/vite": "^4.0.14",
     "@tanstack/react-table": "^8.21.3",
