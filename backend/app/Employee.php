@@ -84,4 +84,9 @@ class Employee extends Authenticatable
     {
         return $this->belongsToMany(Task::class, 'employee_task');
     }
+
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'created_by');
+    }
 }

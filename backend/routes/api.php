@@ -15,6 +15,18 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\API\MessageController;
+use App\Http\Controllers\Dashboard\DgDashboardController;
+use App\Http\Controllers\Dashboard\DepartmentDashboardController;
+use App\Http\Controllers\Dashboard\TeamDashboardController;
+use App\Http\Controllers\Dashboard\EmployeeDashboardController;
+
+
+
+//dashboard
+Route::get('/dashboard/dg', [DgDashboardController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/dashboard/department', [DepartmentDashboardController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/dashboard/team', [TeamDashboardController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/dashboard/employee', [EmployeeDashboardController::class, 'index'])->middleware('auth:sanctum');
 
 // Broadcasting route
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
