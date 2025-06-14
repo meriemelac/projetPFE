@@ -112,7 +112,7 @@ function TasksKanbanBoard() {
             <button onClick={() => setShowAddModal(true)} className="mb-4 bg-blue-600 text-black px-4 py-2 rounded">
                 + Ajouter une tâche
             </button>
-            <AddTaskModalAdd commentMore actions
+            <AddTaskModal commentMore actions
                 isOpen={showAddModal}
                 onClose={() => setShowAddModal(false)}
                 onTaskCreated={() => {

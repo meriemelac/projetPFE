@@ -4,6 +4,7 @@ import { AuthContext } from "./context/AuthContext";
 
 import Layout from "./components/Layout";
 import Home from "./components/Home";
+import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import MyProfile from "./components/MyProfile"
 import EditMyProfile from "./components/EditMyProfile";
@@ -57,7 +58,7 @@ export const routes = [
             </ProtectedRoute>
         ),  // Le Layout est toujours présent
         children: [
-            { path: '/', element: <Home /> },
+            { path: '/', element: <Dashboard /> },
             { path: '/test', element: <Test /> },
             { path: '/profile', element: <MyProfile /> },
             { path: '/edit-my-profile', element: <EditMyProfile /> },

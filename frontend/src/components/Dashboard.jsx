@@ -11,13 +11,13 @@ const Dashboard = () => {
   if (!user) return null;
 
   switch (user.role_id) {
-    case 1: // Directeur général
+    case "1": // Directeur général
       return <DgDashboard />;
-    case 2: // Chef de département
+    case "2": // Chef de département
       return <DepartmentDashboard />;
-    case 3: // Chef d’équipe
+    case "3": // Chef d’équipe
       return <TeamDashboard />;
-    case 4: // Employé
+    case "4": // Employé
       return <EmployeeDashboard />;
     default:
       return <p>Rôle inconnu.</p>;
