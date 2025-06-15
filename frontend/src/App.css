@@ -161,7 +161,7 @@ a:hover{
         order: 2;
     }
     .menu li{
-        padding: 15px 10px;
+        padding: 8px 10px;
     }
     .menu li.button{
         padding-right: 0; 
@@ -186,13 +186,6 @@ a:hover{
 
 /* Sidebar à gauche */
 .sidebar {
-    /* width: 250px;
-    background-color: #0077B6;
-    color: white;
-    padding: 20px;
-    position: fixed;
-    left: 0;
-    top: 60px;  */
     z-index: 50px;
     position: fixed;
     height: 100%;
@@ -200,9 +193,8 @@ a:hover{
     left: 0;
     background: #0077B6;
     color: white;
-    width: 200px;
+    width: 230px;
     transition: width 0.3s;
-    /* overflow: hidden; */
     padding-top: 20px;
 }
 
@@ -295,3 +287,25 @@ a:hover{
         padding: 20px;
     }
 }
+
+.stat-card.employees {
+  background-color: #00839d !important;
+}
+
+.stat-card.departments {
+  background-color: #1fb06d !important;
+}
+
+.stat-card.teams {
+  background-color: #f16e00 !important;
+}
+
+.stat-card.projects {
+  background-color: #005c8b !important;
+}
+
+
+.css-axw7ok{
+    justify-content: center !important;
+}
+
