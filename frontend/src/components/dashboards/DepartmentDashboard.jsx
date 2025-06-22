@@ -126,10 +126,10 @@ const StatusChip = ({ status }) => {
     }
   };
 
-  const { color, icon, label } = getStatusConfig(status);
+  const { color, label } = getStatusConfig(status);
   return (
     <Chip 
-      label={`${icon} ${label}`} 
+      label={label} 
       color={color} 
       variant="filled" 
       size="small"
@@ -209,17 +209,20 @@ const DepartmentLeaderDashboard = () => {
     </Box>
   );
 
-  const { stats, projects, project_progress_list, task_distribution } = data;
+  const { stats, projects, team_tasks_distribution } = data;
+
+  // Calcul du nombre total de tâches pour les statistiques
+  const totalTasks = team_tasks_distribution?.reduce((sum, team) => sum + team.tasks_count, 0) || 0;
 
   // Préparation des données pour le graphique en secteurs
-  const pieData = (task_distribution || []).map((equipe, index) => ({
+  const pieData = (team_tasks_distribution || []).map((equipe, index) => ({
     name: equipe.name,
     value: equipe.tasks_count,
     color: ['#3f51b5', '#4caf50', '#ff9800', '#f44336', '#9c27b0', '#00bcd4'][index % 6]
   }));
 
   // Données pour le graphique en barres
-  const barData = (project_progress_list || []).map(p => ({
+  const barData = (projects || []).map(p => ({
     name: p.title.length > 15 ? p.title.substring(0, 15) + '...' : p.title,
     progress: p.progress,
     fullName: p.title
@@ -241,12 +244,12 @@ const DepartmentLeaderDashboard = () => {
           gap: 1
         }}
       >
-        🏢 Tableau de bord – Chef de Département
+        Tableau de bord – Chef de Département
       </Typography>
 
       {/* Statistiques générales */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} lg={3}>
+        <Grid item xs={12} sm={6} lg={4}>
           <StatCard 
             title="Employés" 
             value={stats.employees} 
@@ -279,7 +282,7 @@ const DepartmentLeaderDashboard = () => {
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard 
             title="Tâches" 
-            value={stats.tasks} 
+            value={totalTasks} 
             icon={<TaskIcon sx={{ fontSize: 28 }} />}
             color="#7b1fa2"
             bgColor="#ab47bc"
@@ -360,7 +363,7 @@ const DepartmentLeaderDashboard = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(project_progress_list || []).map((p, index) => (
+                  {(projects || []).map((p, index) => (
                     <TableRow 
                       key={p.id}
                       sx={{ 
@@ -415,7 +418,7 @@ const DepartmentLeaderDashboard = () => {
             <Box display="flex" alignItems="center" gap={1} mb={3}>
               <PieChartIcon color="secondary" />
               <Typography variant="h6" color="secondary" fontWeight="bold">
-                Répartition des tâches
+                Répartition des tâches par équipe
               </Typography>
             </Box>
             
@@ -449,7 +452,7 @@ const DepartmentLeaderDashboard = () => {
 
             {/* Légende détaillée */}
             <Box sx={{ mt: 2 }}>
-              {(task_distribution || []).map((equipe, index) => (
+              {(team_tasks_distribution || []).map((equipe, index) => (
                 <Box 
                   key={equipe.id} 
                   display="flex" 

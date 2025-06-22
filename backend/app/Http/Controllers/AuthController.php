@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Employee;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\HasApiTokens;
 
 class AuthController extends Controller
 {
+    use HasApiTokens;
     /**
      * Connexion de l'utilisateur et génération d'un token Sanctum.
      */
@@ -25,10 +26,9 @@ class AuthController extends Controller
         $employee = Employee::where('email', $request->email)->first();
 
         if (!$employee || !Hash::check($request->password, $employee->password)) {
-            return response()->json(['message' => 'Identifiants invalides'], 401);
+            return response()->json(['message' => 'Email ou mot de passe invalide'], 401);
         }
 
-        // ✅ Ne pas utiliser la session ici
         $token = $employee->createToken('auth_token')->plainTextToken;
 
         return response()->json([

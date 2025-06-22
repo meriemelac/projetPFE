@@ -15,8 +15,8 @@ class TeamSeeder extends Seeder
         DB::table('teams')->truncate();
 
         DB::table('teams')->insert([
-            ['id' => 1, 'name' => 'Backend', 'department_id' => 1],
-            ['id' => 2, 'name' => 'Frontend', 'department_id' => 1],
+            ['id' => 1, 'name' => 'Développement', 'department_id' => 1],
+            ['id' => 2, 'name' => 'Testing', 'department_id' => 1],
             ['id' => 3, 'name' => 'Recrutement', 'department_id' => 2],
             ['id' => 4, 'name' => 'Formation RH', 'department_id' => 2],
             ['id' => 5, 'name' => 'Communication', 'department_id' => 3],

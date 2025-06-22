@@ -112,25 +112,27 @@ const StatusChip = ({ status }) => {
     switch (status?.toLowerCase()) {
       case 'terminé':
       case 'completed':
-        return { color: 'success', label: status };
+      case 'done':
+        return { color: 'success', label: 'Terminé' };
       case 'en cours':
       case 'in_progress':
-        return { color: 'warning', label: status };
+        return { color: 'warning', label: 'En cours' };
       case 'en attente':
       case 'pending':
-        return { color: 'info', label: status };
+      case 'todo':
+        return { color: 'info', label: 'À faire' };
       case 'annulé':
       case 'cancelled':
-        return { color: 'error', label: status };
+        return { color: 'error', label: 'Annulé' };
       default:
-        return { color: 'default', label: status };
+        return { color: 'default', label: status || 'N/A' };
     }
   };
 
-  const { color, icon, label } = getStatusConfig(status);
+  const { color, label } = getStatusConfig(status);
   return (
     <Chip 
-      label={`${icon} ${label}`} 
+      label={label} 
       color={color} 
       variant="filled" 
       size="small"
@@ -215,7 +217,7 @@ const TeamDashboard = () => {
   // Préparation des données pour le graphique en secteurs
   const pieData = (task_distribution || []).map((member, index) => ({
     name: `${member.first_name} ${member.last_name}`,
-    value: member.tasks_count,
+    value: parseInt(member.tasks_count) || 0,
     color: ['#3f51b5', '#4caf50', '#ff9800', '#f44336', '#9c27b0', '#00bcd4'][index % 6]
   }));
 
@@ -249,7 +251,7 @@ const TeamDashboard = () => {
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard 
-            title="👥 Membres" 
+            title="Membres" 
             value={stats.members} 
             icon={<PeopleIcon sx={{ fontSize: 28 }} />}
             color="#1565c0"
@@ -489,70 +491,6 @@ const TeamDashboard = () => {
           </Paper>
         </Grid>
 
-        {/* Mes tâches */}
-        <Grid item xs={12} lg={6}>
-          <Paper sx={{ p: 3, borderRadius: 3, boxShadow: 3 }}>
-            <Box display="flex" alignItems="center" gap={1} mb={3}>
-              <PersonPinIcon color="primary" />
-              <Typography variant="h6" color="primary" fontWeight="bold">
-                Mes tâches
-              </Typography>
-            </Box>
-            
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow sx={{ '& th': { bgcolor: '#f5f7fa', fontWeight: 'bold', color: '#1976d2' } }}>
-                    <TableCell>Tâche</TableCell>
-                    <TableCell>Projet</TableCell>
-                    <TableCell align="center">Échéance</TableCell>
-                    <TableCell align="center">Statut</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(my_tasks || []).map((t, index) => (
-                    <TableRow 
-                      key={t.id}
-                      sx={{ 
-                        '&:hover': { bgcolor: '#f8f9ff' },
-                        '& td': { borderBottom: '1px solid #e3f2fd' }
-                      }}
-                    >
-                      <TableCell>
-                        <Box display="flex" alignItems="center" gap={2}>
-                          <Avatar 
-                            sx={{ 
-                              width: 24, 
-                              height: 24, 
-                              bgcolor: ['#3f51b5', '#4caf50', '#ff9800', '#f44336'][index % 4],
-                              fontSize: '12px'
-                            }}
-                          >
-                            {t.title.charAt(0)}
-                          </Avatar>
-                          <Typography variant="body2" fontWeight="medium">{t.title}</Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {t.project?.title || 'N/A'}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography variant="body2" color="text.secondary">
-                          {t.due_date ? new Date(t.due_date).toLocaleDateString('fr-FR') : 'N/A'}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <StatusChip status={t.status} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-        </Grid>
 
         {/* Tâches de l'équipe */}
         <Grid item xs={12} lg={6}>
@@ -560,7 +498,7 @@ const TeamDashboard = () => {
             <Box display="flex" alignItems="center" gap={1} mb={3}>
               <GroupIcon color="secondary" />
               <Typography variant="h6" color="secondary" fontWeight="bold">
-                👥 Tâches de l'équipe
+                Tâches de l'équipe
               </Typography>
             </Box>
             
@@ -570,9 +508,9 @@ const TeamDashboard = () => {
                   <TableRow sx={{ '& th': { bgcolor: '#f5f7fa', fontWeight: 'bold', color: '#1976d2' } }}>
                     <TableCell>Tâche</TableCell>
                     <TableCell>Projet</TableCell>
-                    <TableCell>Créée par</TableCell>
-                    <TableCell align="center">📅 Échéance</TableCell>
-                    <TableCell align="center">📊 Statut</TableCell>
+                    
+                    <TableCell align="center">Échéance</TableCell>
+                    <TableCell align="center">Statut</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -602,11 +540,6 @@ const TeamDashboard = () => {
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
                           {t.project?.title || 'N/A'}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" color="text.secondary">
-                          {t.created_by}
                         </Typography>
                       </TableCell>
                       <TableCell align="center">

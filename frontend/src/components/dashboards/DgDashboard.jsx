@@ -186,7 +186,7 @@ const DgDashboard = () => {
       </Typography>
 
       {/* Statistiques générales avec couleurs */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 3, mb: 4 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(20px, 1fr))', gap: 3, mb: 4 }}>
         <StatCard 
           title="Employés" 
           value={stats.employees} 

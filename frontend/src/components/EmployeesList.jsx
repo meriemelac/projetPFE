@@ -121,14 +121,32 @@ const EmployeesList = () => {
 
     return (
         <div className="p-4">
-            {(userRole === "1" || userRole === "2") && (
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2 mb-4 !md:mb-6">
+                <div className="flex flex-col">
+                    <button
+                        onClick={() => window.history.go(-1)}
+                        className="bg-gray-200 hover:bg-gray-300 rounded !font-bold !text-5xl w-fit"
+                    >
+                        ←
+                    </button>
+                    <h2 className="text-2xl font-bold text-gray-800">Liste des employés</h2>
+                </div>
+                <div>
+                    {(userRole === "1" || userRole === "2") && (
                 <button
-                    onClick={() => navigate(`/employees/create`)}
-                    className="bg-blue-500 text-black px-4 py-2 rounded mb-4"
-                >
-                    + Ajouter un nouvel employé
-                </button>
+                            onClick={() => navigate(`/employees/create`)}
+                            className="text-white !text-sm px-4 py-2 rounded"
+                            style={{ backgroundColor: "#0077B6" }}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = "#0098e9")}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0077B6")}
+                        >
+                             + Ajouter un nouvel employé
+                        </button>
             )}
+                </div>
+                
+            </div>
+            
 
 
             <Box p="md">

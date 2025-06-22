@@ -4,6 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import { Avatar, For, HStack } from "@chakra-ui/react";
 import { FaProjectDiagram, FaChevronLeft, FaChevronRight, FaBuilding, FaUsers, FaPlus, FaTasks } from "react-icons/fa";
 import { GoProjectRoadmap } from "react-icons/go";
+import { RiUser3Fill } from "react-icons/ri";
 
 import axiosInstance from "../api/api";
 
@@ -46,7 +47,9 @@ function Sidebar() {
     const managementItems = [
         { path: "/departments", icon: FaBuilding, label: "Départements" },
         { path: "/teams", icon: FaUsers, label: "Équipes" },
-        { path: "/projects", icon: GoProjectRoadmap, label: "Projets" }
+        { path: "/projects", icon: GoProjectRoadmap, label: "Projets" },
+        { path: "/employees", icon: RiUser3Fill , label: "Employés" }
+        // { path: "/test", icon: GoProjectRoadmap, label: "test" }
     ];
 
     return (
@@ -105,7 +108,7 @@ function Sidebar() {
                     {/* Section Projects */}
                     <div className="sidebar__section">
                         {isOpen && <div className="sidebar__section-title">Projets</div>}
-                        <ul className="sidebar__menu">
+                        <ul className="sidebar__menu" style={{    height: '200px'}}>
                             {loading && (
                                 <li className="sidebar__menu-item">
                                     <div className="sidebar__loading">

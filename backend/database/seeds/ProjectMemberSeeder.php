@@ -14,6 +14,23 @@ class ProjectMemberSeeder extends Seeder
             ['employee_id' => 10, 'project_id' => 1], // Salma
             ['employee_id' => 13, 'project_id' => 1], // Laila
             ['employee_id' => 16, 'project_id' => 1], // Imane
+
+            ['employee_id' => 8, 'project_id' => 2], // Imane
+            ['employee_id' => 2, 'project_id' => 2], // Imane
+            ['employee_id' => 5, 'project_id' => 2], // Imane
+            ['employee_id' => 9, 'project_id' => 2], // Imane
+            ['employee_id' => 10, 'project_id' => 2], // Imane
+
+            ['employee_id' => 8, 'project_id' => 3], // Imane
+            ['employee_id' => 2, 'project_id' => 3], // Imane
+            ['employee_id' => 5, 'project_id' => 3], // Imane
+            ['employee_id' => 9, 'project_id' => 3], // Imane
+            ['employee_id' => 10, 'project_id' => 3], // Imane
+
+            ['employee_id' => 8, 'project_id' => 4], // Imane
+            ['employee_id' => 5, 'project_id' => 4], // Imane
+            ['employee_id' => 9, 'project_id' => 4], // Imane
+            ['employee_id' => 10, 'project_id' => 4], // Imane
         ]);
     }
 }

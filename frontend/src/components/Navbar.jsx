@@ -2,6 +2,7 @@ import React, { useContext, useState, useCallback, useRef, useEffect } from 'rea
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Bell, MessageCircle, User, LogOut, ChevronDown } from 'lucide-react';
+import logo from '../assets/logo_taskwave.png';
 
 function Navbar() {
     const { logout, user } = useContext(AuthContext); // Assumant que user contient les infos utilisateur
@@ -45,7 +46,7 @@ function Navbar() {
         <nav> 
             <ul className='menu m-0'>
                 <li className='logo text-white'>
-                    <Link to="/" onClick={closeMenu}>Taskwave</Link>
+                    <Link to="/" onClick={closeMenu}><img src={logo} alt="" style={{width : '127px', height : '44px'}}/></Link>
                 </li>
                 
                 <li className={`item text-white ${isMenuOpen ? 'active' : ''}`}>
@@ -56,7 +57,7 @@ function Navbar() {
                 </li>
                 
                 <li className={`item text-white ${isMenuOpen ? 'active' : ''}`}>
-                    <Link to="/messages" onClick={closeMenu} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Link to="/chat" onClick={closeMenu} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <MessageCircle size={18} />
                         <span>Messages</span>
                     </Link>
@@ -129,7 +130,7 @@ function Navbar() {
                             backgroundColor: 'white',
                             borderRadius: '8px',
                             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                            minWidth: '180px',
+                            minWidth: '200px',
                             zIndex: 1000,
                             marginTop: '8px',
                             overflow: 'hidden'

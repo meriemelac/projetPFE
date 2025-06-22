@@ -4,12 +4,17 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+    background-color: aliceblue;
+}
+
+.css-ya9wah{
+    background-color: aliceblue !important;
 }
 
 nav{
     position: fixed;
     background-color: #0077B6;
-    padding: 0px 20px;
+    padding: 0px 10px;
     top: 0;
     left: 0;
     width: 100%;
@@ -186,7 +191,7 @@ a:hover{
 
 /* Sidebar à gauche */
 .sidebar {
-    z-index: 50px;
+    z-index: 50;
     position: fixed;
     height: 100%;
     top: 40px;

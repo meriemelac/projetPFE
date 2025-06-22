@@ -81,6 +81,7 @@ export const routes = [
             { path: "/employees/create", element: <CreateEmployee /> },
             { path: "/employees/:id/edit", element: <EditEmployee /> },
             { path: "/realtime", element: <RealtimeTest /> },
+            { path: "/chat", element: <ChatPage /> },
             { path: "/chat/:id", element: <ChatPage /> },
         ],
     },

@@ -12,7 +12,7 @@ class CreateProjectsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['planned', 'in_progress', 'completed', 'cancelled'])->default('planned');
+            $table->enum('status', ['En cours', 'Terminé'])->default('En cours');
             $table->date('start_date');
             $table->date('end_date');
             $table->foreignId('manager_id')->constrained('employees')->onDelete('cascade');

@@ -83,10 +83,10 @@ class TaskController extends Controller
         $task = Task::create($validated);
 
         // 🔔 Notification
-        Notification::create([
-            'content' => "Nouvelle tâche créée : {$task->title}",
-            'employee_id' => $user->id,
-        ]);
+        // Notification::create([
+        //     'content' => "Nouvelle tâche créée : {$task->title}",
+        //     'employee_id' => $user->id,
+        // ]);
 
         return response()->json($task, 201);
     }

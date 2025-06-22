@@ -136,12 +136,15 @@ const StatusChip = ({ status }) => {
     switch (status?.toLowerCase()) {
       case 'terminé':
       case 'completed':
+      case 'done':
         return { color: 'success', bg: '#e8f5e9' };
       case 'en cours':
       case 'in_progress':
+      case 'doing':
         return { color: 'warning', bg: '#fff3e0' };
       case 'en attente':
       case 'pending':
+      case 'todo':
         return { color: 'info', bg: '#e3f2fd' };
       case 'annulé':
       case 'cancelled':
@@ -151,10 +154,27 @@ const StatusChip = ({ status }) => {
     }
   };
 
-  const { color, icon, bg } = getStatusConfig(status);
+  const { color, bg } = getStatusConfig(status);
+  
+  // Map status to French display
+  const getDisplayStatus = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'done':
+        return 'Terminé';
+      case 'doing':
+        return 'En cours';
+      case 'todo':
+        return 'À faire';
+      case 'cancelled':
+        return 'Annulé';
+      default:
+        return status;
+    }
+  };
+
   return (
     <Chip 
-      label={`${icon} ${status}`} 
+      label={getDisplayStatus(status)} 
       color={color} 
       variant="filled" 
       size="small"
@@ -274,10 +294,14 @@ const EmployeeDashboard = () => {
 
   const { stats, projects, my_tasks } = data;
 
+  // Calculate completed tasks from my_tasks
+  const completedTasksFromTasks = my_tasks.filter(task => task.status === 'done').length;
+  const inProgressTasks = my_tasks.filter(task => task.status === 'todo' || task.status === 'doing').length;
+
   // Données pour les graphiques
   const taskStatusData = [
-    { name: 'Terminées', value: stats.completed_tasks, color: '#4caf50' },
-    { name: 'En cours', value: stats.tasks - stats.completed_tasks, color: '#ff9800' }
+    { name: 'Terminées', value: completedTasksFromTasks, color: '#4caf50' },
+    { name: 'En cours', value: inProgressTasks, color: '#ff9800' }
   ];
 
   const projectProgressData = projects.map(p => ({
@@ -288,38 +312,6 @@ const EmployeeDashboard = () => {
 
   return (
     <Box sx={{ p: 3, bgcolor: '#fafbfc', minHeight: '100vh' }}>
-      <Box 
-        display="flex" 
-        alignItems="center" 
-        gap={2} 
-        mb={4}
-        sx={{
-          p: 3,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          borderRadius: 4,
-          color: 'white'
-        }}
-      >
-        <Avatar 
-          sx={{ 
-            width: 64, 
-            height: 64, 
-            bgcolor: 'rgba(255,255,255,0.2)',
-            backdropFilter: 'blur(10px)'
-          }}
-        >
-          <PersonIcon sx={{ fontSize: 32 }} />
-        </Avatar>
-        <Box>
-          <Typography variant="h4" fontWeight="bold">
-            Bonjour ! Votre tableau de bord personnel
-          </Typography>
-          <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
-            Suivez vos projets et tâches en temps réel
-          </Typography>
-        </Box>
-      </Box>
-
       {/* Statistiques */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} lg={3}>
@@ -330,40 +322,36 @@ const EmployeeDashboard = () => {
             color="#1565c0"
             bgColor="#42a5f5"
             subtitle="Projets en cours"
-           
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard 
-            title="📝 Tâches totales" 
+            title="Tâches totales" 
             value={stats.tasks} 
             icon={<TaskIcon sx={{ fontSize: 32 }} />}
             color="#2e7d32"
             bgColor="#66bb6a"
             subtitle="À faire & terminées"
-            
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard 
-            title="✅ Tâches terminées" 
+            title="Tâches terminées" 
             value={stats.completed_tasks} 
             icon={<CheckCircleIcon sx={{ fontSize: 32 }} />}
             color="#ed6c02"
             bgColor="#ffa726"
             subtitle="Objectifs atteints"
-           
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={3}>
           <StatCard 
-            title="📊 Progression moyenne" 
+            title="Progression moyenne" 
             value={`${stats.average_progress}%`} 
             icon={<TrendingUpIcon sx={{ fontSize: 32 }} />}
             color="#7b1fa2"
             bgColor="#ab47bc"
             subtitle="Performance globale"
-          
           />
         </Grid>
       </Grid>
