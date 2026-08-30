@@ -157,7 +157,7 @@ function TaskDetailsModal({ taskId, onClose, userRoleId, userId }) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl w-full max-w-4xl h-[400px] overflow-hidden shadow-2xl border border-slate-200">
+            <div className="bg-white rounded-2xl w-full max-w-4xl h-[500px] overflow-hidden shadow-2xl border border-slate-200">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 !p-6 relative">
                     <button 
@@ -332,7 +332,7 @@ function TaskDetailsModal({ taskId, onClose, userRoleId, userId }) {
                                 <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-200">
                                     <button
                                         onClick={() => setIsEditing(true)}
-                                        className="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                                        className="!px-6 !py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
                                     >
                                         Modifier la tâche
                                     </button>
@@ -350,7 +350,7 @@ function TaskDetailsModal({ taskId, onClose, userRoleId, userId }) {
                                                 }
                                             }
                                         }}
-                                        className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+                                        className="!px-6 !py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-black rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
                                     >
                                         Supprimer
                                     </button>
